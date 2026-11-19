@@ -5,6 +5,31 @@ import { AuthService } from '../../core/auth.service';
 import { ConexionesReales } from './conexiones';
 
 describe('ConexionesReales', () => {
+  it('busca estudiantes y envía la solicitud seleccionada', async () => {
+    await TestBed.configureTestingModule({
+      imports: [ConexionesReales],
+      providers: [provideHttpClient(), provideHttpClientTesting(), { provide: AuthService, useValue: { usuario: () => ({ estudianteId: 1 }) } }],
+    }).compileComponents();
+    const http = TestBed.inject(HttpTestingController);
+    const fixture = TestBed.createComponent(ConexionesReales);
+    fixture.detectChanges();
+    http.expectOne('/api/v1/connections/received').flush([]);
+    const buscar = [...fixture.nativeElement.querySelectorAll('button')].find((b: HTMLButtonElement) => b.textContent?.trim() === 'Buscar') as HTMLButtonElement;
+    buscar.click();
+    http.expectOne((request) => request.url === '/api/v1/students/discover' && request.method === 'GET').flush([{id: 2, firstName: 'Ana', lastName: 'Quispe'}]);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.textContent).toContain('Ana Quispe');
+    const enviar = [...fixture.nativeElement.querySelectorAll('button')].find((b: HTMLButtonElement) => b.closest('section')?.textContent?.includes('Ana Quispe') && b.textContent?.trim() === 'Enviar solicitud') as HTMLButtonElement;
+    enviar.click();
+    const solicitud = http.expectOne('/api/v1/connections');
+    expect(solicitud.request.body).toEqual({recipientId: 2});
+    solicitud.flush({});
+    http.expectOne('/api/v1/connections/sent').flush([]);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.textContent).toContain('Solicitud enviada.');
+    http.verify();
+  });
+
   it('muestra una solicitud recibida y permite aceptarla', async () => {
     await TestBed.configureTestingModule({
       imports: [ConexionesReales],
