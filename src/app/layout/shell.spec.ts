@@ -33,7 +33,7 @@ describe('Shell', () => {
     const textos = Array.from((fixture.nativeElement as HTMLElement).querySelectorAll('nav a')).map((a) =>
       a.textContent?.trim(),
     );
-    expect(textos).toEqual(['Inicio', 'Conexiones']);
+    expect(textos).toEqual(['Inicio', 'Conexiones', 'Comunidades']);
   });
 
   it('muestra el nombre, la universidad y las iniciales del usuario', () => {

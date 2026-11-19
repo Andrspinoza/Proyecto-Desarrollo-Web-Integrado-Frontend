@@ -12,6 +12,7 @@ export class Shell {
   protected readonly enlaces = [
     { ruta: '/inicio', texto: 'Inicio' },
     { ruta: '/conexiones', texto: 'Conexiones' },
+    { ruta: '/comunidades', texto: 'Comunidades' },
   ];
   protected readonly iniciales = computed(() => {
     const usuario = this.auth.usuario();

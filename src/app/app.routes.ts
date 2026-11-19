@@ -16,6 +16,7 @@ export const routes: Routes = [
       { path: '', pathMatch: 'full', redirectTo: 'inicio' },
       { path: 'inicio', loadComponent: () => import('./pages/inicio/panel-real').then((m) => m.PanelReal) },
       { path: 'conexiones', loadComponent: () => import('./pages/conexiones/conexiones').then((m) => m.ConexionesReales) },
+      { path: 'comunidades', loadComponent: () => import('./pages/comunidades/comunidades').then((m) => m.Comunidades) },
     ],
   },
   { path: '**', redirectTo: '' },

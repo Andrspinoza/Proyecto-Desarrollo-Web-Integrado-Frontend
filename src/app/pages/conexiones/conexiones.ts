@@ -4,6 +4,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { catchError, forkJoin, map, of, switchMap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../core/auth.service';
+import { FormsModule } from '@angular/forms';
 
 interface ConexionApi {
   id: number;
@@ -20,11 +21,18 @@ type Accion = 'accept' | 'reject' | 'cancel';
 
 @Component({
   selector: 'app-conexiones-reales',
-  imports: [DatePipe],
+  imports: [DatePipe, FormsModule],
   template: `
     <section class="max-w-[1000px] mx-auto">
       <h1 class="font-headline-page text-headline-page text-on-surface mb-2">Tus conexiones</h1>
       <p class="text-text-secondary mb-6">Revisa tus solicitudes y las personas con quienes ya conectaste.</p>
+      <form (ngSubmit)="enviar()" class="bg-surface rounded-xl p-4 border border-border-base mb-5">
+        <label for="destinatario" class="block font-bold mb-2">Enviar solicitud por ID de estudiante</label>
+        <p class="text-text-secondary text-sm mb-2">Mientras terminamos la búsqueda, pide a tu compañero su ID de estudiante.</p>
+        <p class="text-text-secondary text-sm mb-2">Tu ID de estudiante: {{ auth.usuario()?.estudianteId }}</p>
+        <div class="flex gap-2"><input id="destinatario" name="destinatario" type="number" min="1" required [(ngModel)]="destinatario" class="border border-border-base rounded-lg p-2" />
+        <button type="submit" [disabled]="ocupado() || !destinatario" class="rounded-lg bg-primary text-on-primary px-4 py-2 disabled:opacity-50">Enviar solicitud</button></div>
+      </form>
       <div class="flex flex-wrap gap-2 mb-5" aria-label="Tipos de conexiones">
         @for (opcion of opciones; track opcion.id) {
           <button type="button" (click)="elegir(opcion.id)" [attr.aria-pressed]="vista() === opcion.id"
@@ -62,7 +70,7 @@ type Accion = 'accept' | 'reject' | 'cancel';
 })
 export class ConexionesReales implements OnInit {
   private readonly http = inject(HttpClient);
-  private readonly auth = inject(AuthService);
+  protected readonly auth = inject(AuthService);
   protected readonly opciones: { id: Vista; texto: string }[] = [
     { id: 'recibidas', texto: 'Recibidas' }, { id: 'enviadas', texto: 'Enviadas' }, { id: 'aceptadas', texto: 'Conexiones' },
   ];
@@ -73,6 +81,17 @@ export class ConexionesReales implements OnInit {
   protected readonly error = signal<string | null>(null);
   protected readonly aviso = signal<string | null>(null);
   private solicitudActual = 0;
+  protected destinatario: number | null = null;
+
+  protected enviar(): void {
+    const id = this.destinatario;
+    if (!id || !Number.isInteger(id) || id < 1 || this.ocupado()) return;
+    this.ocupado.set(true); this.error.set(null); this.aviso.set(null);
+    this.http.post(`${environment.apiUrl}/connections`, { recipientId: id }).subscribe({
+      next: () => { this.ocupado.set(false); this.destinatario = null; this.aviso.set('Solicitud enviada.'); this.vista.set('enviadas'); this.cargar(); },
+      error: () => { this.ocupado.set(false); this.error.set('No se pudo enviar la solicitud. Comprueba el ID y que el estudiante pertenezca a tu universidad.'); },
+    });
+  }
 
   ngOnInit(): void { this.cargar(); }
 
