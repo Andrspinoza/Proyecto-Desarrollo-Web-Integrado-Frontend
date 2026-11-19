@@ -24,7 +24,7 @@ describe('ConexionesReales', () => {
     peticion.flush({});
     http.expectOne('/api/v1/connections/received').flush([]);
     fixture.detectChanges();
-    expect(fixture.nativeElement.textContent).toContain('Conexión aceptada');
+    expect(fixture.nativeElement.textContent).toContain('¡Qué sale! Ya conectaron');
     expect(fixture.nativeElement.textContent).toContain('No tienes solicitudes pendientes');
     http.verify();
   });

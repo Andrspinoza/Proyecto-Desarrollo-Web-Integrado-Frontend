@@ -15,6 +15,7 @@ interface ConexionApi {
 }
 
 interface EstudianteApi { firstName?: string; lastName?: string }
+interface EstudianteSugerido { id: number; firstName: string; lastName: string }
 interface ConexionVista extends ConexionApi { nombre: string; otroId: number }
 type Vista = 'recibidas' | 'enviadas' | 'aceptadas';
 type Accion = 'accept' | 'reject' | 'cancel';
@@ -26,6 +27,22 @@ type Accion = 'accept' | 'reject' | 'cancel';
     <section class="max-w-[1000px] mx-auto">
       <h1 class="font-headline-page text-headline-page text-on-surface mb-2">Tus conexiones</h1>
       <p class="text-text-secondary mb-6">Revisa tus solicitudes y las personas con quienes ya conectaste.</p>
+      <section class="bg-surface rounded-xl p-4 border border-border-base mb-5">
+        <h2 class="font-bold mb-2">Descubre estudiantes de tu universidad</h2>
+        <form (ngSubmit)="buscar()" class="flex flex-wrap gap-2">
+          <label class="sr-only" for="busqueda">Buscar por nombre</label>
+          <input id="busqueda" name="busqueda" [(ngModel)]="busqueda" maxlength="100" placeholder="Buscar por nombre" class="border border-border-base rounded-lg p-2" />
+          <button type="submit" class="rounded-lg bg-primary text-on-primary px-4 py-2">Buscar</button>
+        </form>
+        @if (buscando()) { <p class="mt-3">Buscando…</p> }
+        @if (busquedaRealizada() && !buscando() && !estudiantes().length) { <p class="mt-3 text-text-secondary">No encontramos estudiantes disponibles.</p> }
+        @for (estudiante of estudiantes(); track estudiante.id) {
+          <div class="flex justify-between gap-3 items-center border-b border-border-base py-3">
+            <span>{{ estudiante.firstName }} {{ estudiante.lastName }}</span>
+            <button type="button" (click)="solicitar(estudiante.id)" [disabled]="ocupado()" class="rounded-lg bg-primary text-on-primary px-4 py-2 disabled:opacity-50">Enviar solicitud</button>
+          </div>
+        }
+      </section>
       <form (ngSubmit)="enviar()" class="bg-surface rounded-xl p-4 border border-border-base mb-5">
         <label for="destinatario" class="block font-bold mb-2">Enviar solicitud por ID de estudiante</label>
         <p class="text-text-secondary text-sm mb-2">Mientras terminamos la búsqueda, pide a tu compañero su ID de estudiante.</p>
@@ -64,7 +81,7 @@ type Accion = 'accept' | 'reject' | 'cancel';
           </article>
         }
       </div>
-      <p class="text-text-secondary text-sm mt-6">La búsqueda de estudiantes y las recomendaciones aún están en desarrollo.</p>
+      <p class="text-text-secondary text-sm mt-6">Las recomendaciones por afinidad aún están en desarrollo.</p>
     </section>
   `,
 })
@@ -82,6 +99,19 @@ export class ConexionesReales implements OnInit {
   protected readonly aviso = signal<string | null>(null);
   private solicitudActual = 0;
   protected destinatario: number | null = null;
+  protected busqueda = '';
+  protected readonly estudiantes = signal<EstudianteSugerido[]>([]);
+  protected readonly buscando = signal(false);
+  protected readonly busquedaRealizada = signal(false);
+
+  protected buscar(): void {
+    this.buscando.set(true); this.error.set(null); this.busquedaRealizada.set(false);
+    this.http.get<EstudianteSugerido[]>(`${environment.apiUrl}/students/discover`, { params: { q: this.busqueda.trim() } }).subscribe({
+      next: (lista) => { this.estudiantes.set(lista); this.buscando.set(false); this.busquedaRealizada.set(true); },
+      error: () => { this.buscando.set(false); this.error.set('No se pudo buscar estudiantes. Inténtalo nuevamente.'); },
+    });
+  }
+  protected solicitar(id: number): void { this.destinatario = id; this.enviar(); }
 
   protected enviar(): void {
     const id = this.destinatario;
@@ -106,7 +136,16 @@ export class ConexionesReales implements OnInit {
     if (this.ocupado()) return;
     this.ocupado.set(true); this.error.set(null); this.aviso.set(null);
     this.http.patch(`${environment.apiUrl}/connections/${id}/${accion}`, {}).subscribe({
-      next: () => { this.ocupado.set(false); this.aviso.set(accion === 'accept' ? 'Conexión aceptada.' : accion === 'reject' ? 'Solicitud rechazada.' : 'Solicitud cancelada.'); this.cargar(); },
+      next: () => {
+        this.ocupado.set(false);
+        this.aviso.set(accion === 'accept' ? '¡Qué sale! Ya conectaron 🤠' : accion === 'reject' ? 'Solicitud rechazada.' : 'Solicitud cancelada.');
+        if (accion === 'accept' && typeof window !== 'undefined' && 'speechSynthesis' in window) {
+          const grito = new SpeechSynthesisUtterance('Yeehaw');
+          grito.lang = 'en-US';
+          window.speechSynthesis.speak(grito);
+        }
+        this.cargar();
+      },
       error: () => { this.ocupado.set(false); this.error.set('No se pudo actualizar la solicitud. Inténtalo de nuevo.'); },
     });
   }
