@@ -1,10 +1,10 @@
 # ¿Qué sale? — Frontend de Desarrollo Web Integrado
 
-> Adaptación parcial del frontend del Curso Integrador I. La navegación activa incluye acceso y panel con meetups y solicitudes de conexión; las demás pantallas descritas abajo son código heredado **aún no integrado** y no están enlazadas. Las pruebas usan respuestas simuladas: no confirman el funcionamiento de extremo a extremo.
+> Adaptación parcial del frontend del Curso Integrador I. Las pantallas de perfiles, descubrimiento, creación de meetups, chat y llamadas del código heredado **aún no están integradas**. Las pruebas usan respuestas simuladas: no confirman el funcionamiento de extremo a extremo.
 
 > La API se consulta mediante `/api/v1` en el mismo origen. El servidor de despliegue debe redirigir esa ruta al backend y devolver `index.html` para las rutas de Angular. Se requiere el backend JWT, un catálogo de universidades configurado y SMTP real para verificar correos.
 
-Interfaz web del **Sistema de Conexión y Organización de Meetups Académicos y Sociales para Estudiantes Universitarios**. Proyecto del Curso Integrador I (UTP, 2026-2).
+Interfaz web del **Sistema de Conexión y Organización de Meetups Académicos y Sociales para Estudiantes Universitarios**, adaptada para Desarrollo Web Integrado (UTP, 2026-2).
 
 ## Stack
 
@@ -17,10 +17,8 @@ Construidas a partir del diseño del Figma. Solo muestran datos que el backend e
 | Pantalla | Ruta | Qué hace |
 |---|---|---|
 | Acceso | `/acceso` | Iniciar sesión y crear cuenta con correo institucional |
-| Inicio | `/inicio` | Perfil, actividad, próximos meetups con filtro, solicitudes de conexión y sugerencias |
-| Explorar | `/explorar` | Búsqueda de meetups y de estudiantes con filtros |
-| Mis Meetups | `/mis-meetups` | Crear, editar y cancelar; aprobar participantes; exportar a Excel; retirarse |
-| Mi Perfil | `/mi-perfil` | Editar perfil, intereses, habilidades y visibilidad; contactos |
+| Inicio | `/inicio` | Consultar meetups y solicitudes recibidas; solicitar participación y responder solicitudes |
+| Conexiones | `/conexiones` | Consultar solicitudes recibidas y enviadas y conexiones aceptadas; aceptar, rechazar o cancelar solicitudes |
 
 ## Estructura
 
@@ -38,7 +36,7 @@ src/app/
 
 ## Cómo ejecutarlo
 
-Requisitos: Node 20 o superior y el backend corriendo en `http://localhost:8090`.
+Requisitos: una versión de Node compatible con Angular 21 y un proxy que envíe `/api` al backend.
 
 ```bash
 npm install
@@ -59,4 +57,4 @@ Las pruebas cubren los servicios, el interceptor, las guardas y cada pantalla co
 ## Repositorios
 
 - Frontend: este repositorio.
-- Backend: `Proyecto-Integrador-Universidad-Backend`.
+- Backend: `Proyecto-Desarrollo-Web-Integrado-Universidad`.

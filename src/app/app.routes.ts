@@ -15,6 +15,7 @@ export const routes: Routes = [
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'inicio' },
       { path: 'inicio', loadComponent: () => import('./pages/inicio/panel-real').then((m) => m.PanelReal) },
+      { path: 'conexiones', loadComponent: () => import('./pages/conexiones/conexiones').then((m) => m.ConexionesReales) },
     ],
   },
   { path: '**', redirectTo: '' },

@@ -11,6 +11,7 @@ export class Shell {
   protected readonly auth = inject(AuthService);
   protected readonly enlaces = [
     { ruta: '/inicio', texto: 'Inicio' },
+    { ruta: '/conexiones', texto: 'Conexiones' },
   ];
   protected readonly iniciales = computed(() => {
     const usuario = this.auth.usuario();
