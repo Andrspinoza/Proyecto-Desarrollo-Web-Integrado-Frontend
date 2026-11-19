@@ -1,0 +1,32 @@
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+  <div class="h-16 max-w-[1200px] mx-auto px-lg flex items-center justify-between gap-xl">
+    <a routerLink="/inicio" class="flex items-center gap-2 font-headline-section text-[22px] font-bold text-primary whitespace-nowrap select-none no-underline"><img src="logo-quesale-cereza.png" alt="" class="h-9 w-9 object-contain" />¿Qué sale?</a>
+    <nav class="flex items-center gap-xl h-full" aria-label="Principal">
+      @for (enlace of enlaces; track enlace.ruta) {
+        <a
+          [routerLink]="enlace.ruta"
+          routerLinkActive="text-primary font-bold border-b-2 border-primary"
+          class="h-full flex items-center px-sm transition-colors text-body-base text-on-surface-variant hover:text-on-surface no-underline"
+        >{{ enlace.texto }}</a>
+      }
+    </nav>
+    <div class="flex items-center gap-md shrink-0">
+      @if (auth.usuario(); as usuario) {
+        <div class="hidden md:flex flex-col items-end">
+          <span class="text-body-secondary font-semibold text-on-surface">{{ usuario.nombres }} {{ usuario.apellidos }}</span>
+          <span class="text-[11px] text-text-secondary">{{ usuario.universidad }}</span>
+        </div>
+        <span class="w-8 h-8 rounded-full bg-primary-soft text-primary flex items-center justify-center text-label-chip font-bold" aria-hidden="true">{{ iniciales() }}</span>
+      }
+      <button type="button" (click)="salir()" class="flex items-center gap-xs px-sm py-xs rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors cursor-pointer border-none bg-transparent">
+        <span class="material-symbols-outlined text-[20px]">logout</span>
+        <span class="text-body-secondary">Salir</span>
+      </button>
+    </div>
+  </div>
+</header>
+<main class="w-full pt-16 min-h-screen">
+  <div class="max-w-[1200px] mx-auto py-xl px-lg">
+    <router-outlet />
+  </div>
+</main>

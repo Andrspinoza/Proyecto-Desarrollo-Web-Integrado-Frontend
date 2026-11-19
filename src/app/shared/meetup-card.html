@@ -1,0 +1,64 @@
+<article class="bg-surface-container-lowest rounded-xl shadow-sm p-lg flex flex-col gap-md hover:shadow-md transition-shadow">
+  <div class="flex items-center justify-between gap-md">
+    <span
+      class="px-sm py-xs rounded-full font-label-chip text-label-chip"
+      [class]="academico() ? 'bg-academic-bg text-academic-text' : 'bg-social-bg text-social-text'"
+    >{{ academico() ? 'Académico' : 'Social' }}</span>
+    <span class="font-body-secondary text-body-secondary text-text-secondary">{{ meetup().universidad }}</span>
+  </div>
+
+  <div class="flex flex-col gap-xs">
+    <h3 class="font-title-card text-title-card text-on-surface m-0">{{ meetup().titulo }}</h3>
+    @if (meetup().descripcion) {
+      <p class="font-body-secondary text-body-secondary text-text-secondary m-0 line-clamp-2">{{ meetup().descripcion }}</p>
+    }
+  </div>
+
+  <ul class="flex flex-col gap-xs list-none p-0 m-0 font-body-secondary text-body-secondary text-text-secondary">
+    <li class="flex items-center gap-sm">
+      <span class="material-symbols-outlined text-[18px]">calendar_today</span>
+      <span class="capitalize">{{ fecha() }}</span>
+    </li>
+    <li class="flex items-center gap-sm">
+      <span class="material-symbols-outlined text-[18px]">location_on</span>
+      {{ meetup().lugar }}
+    </li>
+    <li class="flex items-center gap-sm">
+      <span class="material-symbols-outlined text-[18px]">group</span>
+      {{ meetup().confirmados }} / {{ meetup().cupoMaximo }} confirmados
+    </li>
+  </ul>
+
+  <div class="flex items-center justify-between gap-md pt-sm">
+    <span class="font-body-secondary text-body-secondary text-text-secondary">Organiza {{ meetup().organizador }}</span>
+    @switch (estadoAccion()) {
+      @case ('organizador') {
+        <span class="px-md py-xs rounded-full bg-primary-soft text-primary font-label-chip text-label-chip">Eres el organizador</span>
+      }
+      @case ('cancelado') {
+        <span class="px-md py-xs rounded-full bg-error-container text-error font-label-chip text-label-chip">Cancelado</span>
+      }
+      @case ('solicitada') {
+        <button type="button" [disabled]="ocupado()" (click)="retirar.emit(meetup())" class="px-md py-sm rounded-lg bg-warning/15 text-social-text font-label-chip text-label-chip border-none cursor-pointer disabled:opacity-60">
+          Solicitud enviada · Cancelar
+        </button>
+      }
+      @case ('confirmada') {
+        <button type="button" [disabled]="ocupado()" (click)="retirar.emit(meetup())" class="px-md py-sm rounded-lg bg-academic-bg text-academic-text font-label-chip text-label-chip border-none cursor-pointer disabled:opacity-60">
+          Confirmado · Retirarme
+        </button>
+      }
+      @case ('rechazada') {
+        <span class="px-md py-xs rounded-full bg-surface-container text-text-secondary font-label-chip text-label-chip">Solicitud rechazada</span>
+      }
+      @case ('lleno') {
+        <span class="px-md py-xs rounded-full bg-surface-container text-text-secondary font-label-chip text-label-chip">Cupo lleno</span>
+      }
+      @default {
+        <button type="button" [disabled]="ocupado()" (click)="solicitar.emit(meetup())" class="px-lg py-sm rounded-lg bg-primary hover:bg-primary-hover text-on-primary font-label-chip text-label-chip border-none cursor-pointer transition-colors disabled:opacity-60">
+          Solicitar unirme
+        </button>
+      }
+    }
+  </div>
+</article>

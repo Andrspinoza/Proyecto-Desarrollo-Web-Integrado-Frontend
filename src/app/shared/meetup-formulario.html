@@ -1,0 +1,79 @@
+<div class="fixed inset-0 z-[60] bg-on-surface/40 flex items-center justify-center p-lg" (click)="cerrado.emit()" role="presentation">
+  <form
+    [formGroup]="formulario"
+    (ngSubmit)="guardar()"
+    (click)="$event.stopPropagation()"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="titulo-modal"
+    class="w-full max-w-[560px] max-h-full overflow-y-auto bg-surface rounded-xl shadow-xl p-xl flex flex-col gap-lg"
+    novalidate
+  >
+    <div class="flex items-center justify-between">
+      <h2 id="titulo-modal" class="font-headline-section text-headline-section text-on-surface m-0">
+        {{ meetup() ? 'Editar meetup' : 'Organizar un meetup' }}
+      </h2>
+      <button type="button" (click)="cerrado.emit()" aria-label="Cerrar" class="bg-transparent border-none cursor-pointer text-on-surface-variant flex">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <div class="flex flex-col gap-sm">
+      <label for="titulo" class="font-label-chip text-label-chip text-on-surface-variant">Título</label>
+      <input id="titulo" formControlName="titulo" type="text" maxlength="80" class="w-full h-10 px-sm bg-surface-container-low rounded-lg outline-none text-body-base focus:bg-primary-soft border-none" />
+      @if (invalido('titulo')) {
+        <span class="font-body-secondary text-body-secondary text-error">Escribe un título de hasta 80 caracteres</span>
+      }
+    </div>
+
+    <div class="flex flex-col gap-sm">
+      <label for="descripcion" class="font-label-chip text-label-chip text-on-surface-variant">Descripción</label>
+      <textarea id="descripcion" formControlName="descripcion" rows="3" maxlength="1000" class="w-full p-sm bg-surface-container-low rounded-lg outline-none text-body-base focus:bg-primary-soft border-none resize-y"></textarea>
+    </div>
+
+    <div class="grid grid-cols-2 gap-md">
+      <div class="flex flex-col gap-sm">
+        <label for="tipo" class="font-label-chip text-label-chip text-on-surface-variant">Tipo</label>
+        <select id="tipo" formControlName="tipo" class="w-full h-10 px-sm bg-surface-container-low rounded-lg outline-none text-body-base border-none cursor-pointer">
+          <option value="ACADEMICO">Académico</option>
+          <option value="SOCIAL">Social</option>
+        </select>
+      </div>
+      <div class="flex flex-col gap-sm">
+        <label for="cupo" class="font-label-chip text-label-chip text-on-surface-variant">Cupo (2 a 50)</label>
+        <input id="cupo" formControlName="cupoMaximo" type="number" min="2" max="50" class="w-full h-10 px-sm bg-surface-container-low rounded-lg outline-none text-body-base focus:bg-primary-soft border-none" />
+        @if (invalido('cupoMaximo')) {
+          <span class="font-body-secondary text-body-secondary text-error">El cupo debe estar entre 2 y 50</span>
+        }
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-md">
+      <div class="flex flex-col gap-sm">
+        <label for="fecha" class="font-label-chip text-label-chip text-on-surface-variant">Fecha y hora</label>
+        <input id="fecha" formControlName="fechaHora" type="datetime-local" class="w-full h-10 px-sm bg-surface-container-low rounded-lg outline-none text-body-base focus:bg-primary-soft border-none" />
+        @if (invalido('fechaHora')) {
+          <span class="font-body-secondary text-body-secondary text-error">Elige la fecha y la hora</span>
+        }
+      </div>
+      <div class="flex flex-col gap-sm">
+        <label for="lugar" class="font-label-chip text-label-chip text-on-surface-variant">Lugar</label>
+        <input id="lugar" formControlName="lugar" type="text" maxlength="150" class="w-full h-10 px-sm bg-surface-container-low rounded-lg outline-none text-body-base focus:bg-primary-soft border-none" />
+        @if (invalido('lugar')) {
+          <span class="font-body-secondary text-body-secondary text-error">Indica dónde se encuentran</span>
+        }
+      </div>
+    </div>
+
+    @if (error(); as mensaje) {
+      <div role="alert" class="font-body-secondary text-body-secondary text-error bg-error-container/40 rounded-lg px-md py-sm">{{ mensaje }}</div>
+    }
+
+    <div class="flex justify-end gap-md">
+      <button type="button" (click)="cerrado.emit()" class="px-lg py-sm rounded-lg bg-surface-container text-on-surface-variant font-title-card text-body-base border-none cursor-pointer">Cancelar</button>
+      <button type="submit" [disabled]="guardando()" class="px-xl py-sm rounded-lg bg-primary hover:bg-primary-hover text-on-primary font-title-card text-body-base border-none cursor-pointer disabled:opacity-60">
+        {{ guardando() ? 'Guardando…' : meetup() ? 'Guardar cambios' : 'Publicar meetup' }}
+      </button>
+    </div>
+  </form>
+</div>

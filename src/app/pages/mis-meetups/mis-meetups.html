@@ -1,0 +1,82 @@
+<div class="flex flex-col gap-lg">
+  <header class="flex items-center justify-between gap-md">
+    <div class="flex flex-col gap-xs">
+      <h1 class="font-headline-page text-headline-page text-on-surface m-0">Mis Meetups</h1>
+      <p class="font-body-base text-body-base text-text-secondary m-0">Los que organizas y en los que participas</p>
+    </div>
+    <button type="button" (click)="abrirFormulario(null)" class="flex items-center gap-sm px-lg py-sm rounded-lg bg-primary hover:bg-primary-hover text-on-primary font-title-card text-body-base border-none cursor-pointer shadow-md transition-colors">
+      <span class="material-symbols-outlined text-[20px]">add</span>Crear meetup
+    </button>
+  </header>
+
+  <div class="flex gap-lg border-b border-border-base" role="tablist">
+    <button type="button" role="tab" [attr.aria-selected]="pestana() === 'organizo'" (click)="elegirPestana('organizo')" class="px-sm py-md bg-transparent border-none cursor-pointer text-body-base" [class]="pestana() === 'organizo' ? 'text-primary font-bold border-b-2 border-primary' : 'text-on-surface-variant'">Organizo ({{ organizados().length }})</button>
+    <button type="button" role="tab" [attr.aria-selected]="pestana() === 'participo'" (click)="elegirPestana('participo')" class="px-sm py-md bg-transparent border-none cursor-pointer text-body-base" [class]="pestana() === 'participo' ? 'text-primary font-bold border-b-2 border-primary' : 'text-on-surface-variant'">Participo ({{ participando().length }})</button>
+  </div>
+
+  @if (error(); as mensaje) {
+    <div role="alert" class="font-body-secondary text-body-secondary text-error bg-error-container/40 rounded-lg px-md py-sm">{{ mensaje }}</div>
+  }
+
+  @if (cargando()) {
+    <p class="font-body-base text-text-secondary">Cargando…</p>
+  } @else if (pestana() === 'organizo') {
+    @if (organizados().length === 0) {
+      <div class="bg-surface-container-lowest rounded-xl p-xl text-center flex flex-col items-center gap-sm">
+        <span class="material-symbols-outlined text-[40px] text-text-disabled">event</span>
+        <p class="font-title-card text-title-card text-on-surface m-0">Aún no organizas ningún meetup</p>
+        <p class="font-body-secondary text-body-secondary text-text-secondary m-0">Crea el primero y confirma a quienes quieran unirse.</p>
+      </div>
+    }
+    @for (m of organizados(); track m.id) {
+      <div class="flex flex-col gap-md">
+        <app-meetup-card [meetup]="m" />
+        @if (m.estado === 'PROGRAMADO') {
+          <div class="flex flex-wrap gap-sm">
+            <button type="button" (click)="abrirFormulario(m)" class="px-md py-sm rounded-lg bg-surface-container-lowest text-on-surface-variant font-label-chip text-label-chip border-none cursor-pointer hover:bg-surface-container-high shadow-sm">Editar</button>
+            <button type="button" (click)="alternarParticipantes(m)" class="px-md py-sm rounded-lg bg-primary-soft text-primary font-label-chip text-label-chip border-none cursor-pointer">{{ abierto() === m.id ? 'Ocultar participantes' : 'Participantes' }}</button>
+            <button type="button" (click)="exportar(m)" class="px-md py-sm rounded-lg bg-academic-bg text-academic-text font-label-chip text-label-chip border-none cursor-pointer flex items-center gap-xs"><span class="material-symbols-outlined text-[18px]">download</span>Exportar Excel</button>
+            <button type="button" [disabled]="ocupado()" (click)="cancelar(m)" class="px-md py-sm rounded-lg bg-error-container/50 text-error font-label-chip text-label-chip border-none cursor-pointer disabled:opacity-60">Cancelar meetup</button>
+          </div>
+        }
+        @if (abierto() === m.id) {
+          <section class="bg-surface-container-lowest rounded-xl shadow-sm p-lg flex flex-col gap-md" aria-label="Participantes">
+            @if (participantes().length === 0) {
+              <p class="font-body-secondary text-body-secondary text-text-secondary m-0">Todavía nadie ha solicitado unirse.</p>
+            }
+            @for (p of participantes(); track p.participacionId) {
+              <div class="flex items-center gap-md">
+                <span class="w-10 h-10 rounded-full bg-primary-soft text-primary flex items-center justify-center font-bold shrink-0" aria-hidden="true">{{ inicialesDe(p) }}</span>
+                <div class="flex flex-col min-w-0 flex-1">
+                  <span class="font-title-card text-body-base text-on-surface truncate">{{ nombre(p) }}</span>
+                  <span class="font-body-secondary text-body-secondary text-text-secondary truncate">{{ p.universidad }}</span>
+                </div>
+                @if (p.estado === 'SOLICITADA') {
+                  <button type="button" [disabled]="ocupado()" (click)="aprobar(p, m)" class="px-md py-xs rounded-lg bg-primary text-on-primary font-label-chip text-label-chip border-none cursor-pointer disabled:opacity-60">Aprobar</button>
+                  <button type="button" [disabled]="ocupado()" (click)="rechazar(p, m)" class="px-md py-xs rounded-lg bg-surface-container text-on-surface-variant font-label-chip text-label-chip border-none cursor-pointer disabled:opacity-60">Rechazar</button>
+                } @else {
+                  <span class="px-md py-xs rounded-full bg-surface-container text-text-secondary font-label-chip text-label-chip">{{ etiqueta(p.estado) }}</span>
+                }
+              </div>
+            }
+          </section>
+        }
+      </div>
+    }
+  } @else {
+    @if (participando().length === 0) {
+      <div class="bg-surface-container-lowest rounded-xl p-xl text-center flex flex-col items-center gap-sm">
+        <span class="material-symbols-outlined text-[40px] text-text-disabled">group_off</span>
+        <p class="font-title-card text-title-card text-on-surface m-0">No participas en ningún meetup</p>
+        <p class="font-body-secondary text-body-secondary text-text-secondary m-0">Busca uno en Explorar y solicita unirte.</p>
+      </div>
+    }
+    @for (m of participando(); track m.id) {
+      <app-meetup-card [meetup]="m" [ocupado]="ocupado()" (retirar)="retirar($event)" />
+    }
+  }
+</div>
+
+@if (formulario(); as estado) {
+  <app-meetup-formulario [meetup]="estado.meetup" (guardado)="guardado()" (cerrado)="cerrarFormulario()" />
+}

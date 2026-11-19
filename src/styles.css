@@ -1,0 +1,101 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #B4193D;
+  --color-primary-hover: #931231;
+  --color-primary-soft: #FCECF1;
+  --color-primary-container: #B4193D;
+  --color-on-primary: #ffffff;
+  --color-on-primary-container: #FCECF1;
+  --color-surface: #ffffff;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f7f8fc;
+  --color-surface-container: #f1f3fa;
+  --color-surface-container-high: #e9ecf7;
+  --color-surface-container-highest: #e2e5f0;
+  --color-surface-tertiary: #eff1f8;
+  --color-background: #FCFAFC;
+  --color-on-surface: #172B4D;
+  --color-on-surface-variant: #526078;
+  --color-on-background: #172B4D;
+  --color-text-main: #172B4D;
+  --color-text-secondary: #526078;
+  --color-text-disabled: #9ba0b8;
+  --color-outline: #5c6079;
+  --color-outline-variant: #e2e5f0;
+  --color-border-base: #e2e5f0;
+  --color-secondary-container: #dedfe3;
+  --color-error: #e5484d;
+  --color-error-container: #ffdad6;
+  --color-success: #12a150;
+  --color-warning: #e5a000;
+  --color-academic-bg: #e3f7ef;
+  --color-academic-text: #0e7c57;
+  --color-social-bg: #fff4e0;
+  --color-social-text: #b36a00;
+
+  --font-body-base: Manrope, sans-serif;
+  --font-body-secondary: Manrope, sans-serif;
+  --font-title-card: Manrope, sans-serif;
+  --font-label-chip: Manrope, sans-serif;
+  --font-headline-section: Outfit, sans-serif;
+  --font-headline-page: Outfit, sans-serif;
+
+  --text-body-secondary: 13px;
+  --text-body-secondary--line-height: 18px;
+  --text-body-base: 14px;
+  --text-body-base--line-height: 20px;
+  --text-title-card: 16px;
+  --text-title-card--line-height: 24px;
+  --text-title-card--font-weight: 600;
+  --text-label-chip: 12px;
+  --text-label-chip--line-height: 16px;
+  --text-label-chip--font-weight: 500;
+  --text-headline-section: 20px;
+  --text-headline-section--line-height: 28px;
+  --text-headline-section--font-weight: 700;
+  --text-headline-page: 30px;
+  --text-headline-page--line-height: 36px;
+  --text-headline-page--font-weight: 700;
+
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 24px;
+  --spacing-xxl: 32px;
+  --spacing-huge: 48px;
+
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.875rem;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background-color: var(--color-surface-tertiary);
+  color: var(--color-on-surface);
+  font-family: Manrope, sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.material-symbols-outlined {
+  font-family: "Material Symbols Outlined";
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+}
