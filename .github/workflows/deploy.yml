@@ -1,0 +1,39 @@
+name: Despliegue frontend de prueba
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: frontend-preview
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm test -- --watch=false
+      - run: npm run build
+      - name: Configurar acceso restringido
+        env:
+          DEPLOY_KEY: ${{ secrets.FRONTEND_DEPLOY_KEY }}
+          TRUSTED_HOSTS: ${{ secrets.FRONTEND_KNOWN_HOSTS }}
+        run: |
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "$DEPLOY_KEY" > ~/.ssh/deploy_key
+          printf '%s\n' "$TRUSTED_HOSTS" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/deploy_key ~/.ssh/known_hosts
+      - name: Publicar archivos de la versión de prueba
+        run: |
+          rsync -az -e 'ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes' \
+            dist/quesale-frontend/browser/ quesale-ci@144.126.129.152:/
