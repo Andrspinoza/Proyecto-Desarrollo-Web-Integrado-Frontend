@@ -1,75 +1,65 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, forkJoin, map, switchMap, tap } from 'rxjs';
-import { environment } from '../../environments/environment';
-import { AuthRespuesta, LoginDatos, RegistroDatos, Universidad, Usuario } from './models';
-
-interface UniversidadApi { id: number; name: string; emailDomain: string; active: boolean }
-interface EstudianteApi { id: number; email: string; firstName: string; lastName: string; universityId: number }
-interface SesionApi { accessToken: string; tokenType: string; expiresIn: number; studentId: number }
-interface RegistroRespuesta { studentId: number; message: string }
+import { Observable, map, of, switchMap, tap } from 'rxjs';
+import { Api } from './api.service';
+import { EstudianteApi, Universidad } from './api.models';
 
 const CLAVE_TOKEN = 'quesale.token';
-const CLAVE_USUARIO = 'quesale.usuario';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly http = inject(HttpClient);
+  private readonly api = inject(Api);
   private readonly router = inject(Router);
   private readonly _token = signal<string | null>(leer(CLAVE_TOKEN));
-  private readonly _usuario = signal<Usuario | null>(leerUsuario());
+  private readonly _yo = signal<EstudianteApi | null>(null);
+  private readonly _universidades = signal<Universidad[]>([]);
 
-  readonly usuario = this._usuario.asReadonly();
   readonly autenticado = computed(() => this._token() !== null);
+  readonly yo = this._yo.asReadonly();
+  readonly universidades = this._universidades.asReadonly();
+  readonly universidad = computed(() => this._universidades().find((u) => u.id === this._yo()?.universityId) ?? null);
+  readonly nombre = computed(() => this._yo()?.firstName ?? '');
+  readonly perfilCompleto = computed(() => this._yo()?.profile != null);
 
   token(): string | null {
     return this._token();
   }
 
-  universidades(): Observable<Universidad[]> {
-    return this.http.get<UniversidadApi[]>(`${environment.apiUrl}/universities`).pipe(
-      map((lista) => lista.filter((u) => u.active).map((u) => ({ id: u.id, nombre: u.name, dominioCorreo: u.emailDomain }))),
+  iniciarSesion(email: string, password: string): Observable<EstudianteApi | null> {
+    return this.api.iniciarSesion(email, password).pipe(
+      tap((sesion) => {
+        this._token.set(sesion.accessToken);
+        escribir(CLAVE_TOKEN, sesion.accessToken);
+      }),
+      switchMap(() => this.cargarYo()),
     );
   }
 
-  registrar(datos: RegistroDatos): Observable<RegistroRespuesta> {
-    return this.http.post<RegistroRespuesta>(`${environment.apiUrl}/auth/register`, {
-      universityId: datos.universidadId, email: datos.correo, password: datos.password,
-      firstName: datos.nombres, lastName: datos.apellidos,
-    });
+  cargarYo(): Observable<EstudianteApi | null> {
+    if (this._token() === null) return of(null);
+    return this.api.yo().pipe(
+      tap((yo) => this._yo.set(yo)),
+      map((yo) => yo as EstudianteApi | null),
+    );
   }
 
-  iniciarSesion(datos: LoginDatos): Observable<AuthRespuesta> {
-    return this.http
-      .post<SesionApi>(`${environment.apiUrl}/auth/login`, { email: datos.correo, password: datos.password })
-      .pipe(switchMap((sesion) => forkJoin({
-        estudiante: this.http.get<EstudianteApi>(`${environment.apiUrl}/students/${sesion.studentId}`, {
-          headers: { Authorization: `Bearer ${sesion.accessToken}` },
-        }),
-        universidades: this.universidades(),
-      }).pipe(map(({ estudiante, universidades }): AuthRespuesta => ({
-        token: sesion.accessToken, tipo: sesion.tokenType, expiraEnSegundos: sesion.expiresIn,
-        usuario: { estudianteId: estudiante.id, correo: estudiante.email, nombres: estudiante.firstName,
-          apellidos: estudiante.lastName, universidadId: estudiante.universityId,
-          universidad: universidades.find((u) => u.id === estudiante.universityId)?.nombre ?? 'Universidad', rol: 'ESTUDIANTE' },
-      })))))
-      .pipe(tap((respuesta) => this.guardar(respuesta)));
+  cargarUniversidades(): Observable<Universidad[]> {
+    if (this._universidades().length > 0) return of(this._universidades());
+    return this.api.universidades().pipe(
+      map((lista) => lista.filter((u) => u.active)),
+      tap((lista) => this._universidades.set(lista)),
+    );
+  }
+
+  actualizarYo(yo: EstudianteApi): void {
+    this._yo.set(yo);
   }
 
   cerrarSesion(): void {
     this._token.set(null);
-    this._usuario.set(null);
+    this._yo.set(null);
     escribir(CLAVE_TOKEN, null);
-    escribir(CLAVE_USUARIO, null);
     this.router.navigate(['/acceso']);
-  }
-
-  private guardar(respuesta: AuthRespuesta): void {
-    this._token.set(respuesta.token);
-    this._usuario.set(respuesta.usuario);
-    escribir(CLAVE_TOKEN, respuesta.token);
-    escribir(CLAVE_USUARIO, JSON.stringify(respuesta.usuario));
   }
 }
 
@@ -83,24 +73,9 @@ function leer(clave: string): string | null {
 
 function escribir(clave: string, valor: string | null): void {
   try {
-    if (valor === null) {
-      sessionStorage.removeItem(clave);
-    } else {
-      sessionStorage.setItem(clave, valor);
-    }
+    if (valor === null) sessionStorage.removeItem(clave);
+    else sessionStorage.setItem(clave, valor);
   } catch {
     return;
-  }
-}
-
-function leerUsuario(): Usuario | null {
-  const texto = leer(CLAVE_USUARIO);
-  if (texto === null) {
-    return null;
-  }
-  try {
-    return JSON.parse(texto) as Usuario;
-  } catch {
-    return null;
   }
 }

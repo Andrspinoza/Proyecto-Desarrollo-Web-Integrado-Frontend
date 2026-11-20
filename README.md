@@ -1,60 +1,60 @@
-# ¿Qué sale? — Frontend de Desarrollo Web Integrado
+# ¿Qué sale? — Frontend
 
-> Adaptación parcial del frontend del Curso Integrador I. Las pantallas de perfiles, descubrimiento, creación de meetups, chat y llamadas del código heredado **aún no están integradas**. Las pruebas usan respuestas simuladas: no confirman el funcionamiento de extremo a extremo.
+Aplicación web de **¿Qué sale?**, la red social de estudiantes universitarios (Desarrollo Web Integrado, UTP, 2026-2). Consume la API del backend (`/api/v1`) con autenticación JWT.
 
-> La API se consulta mediante `/api/v1` en el mismo origen. El servidor de despliegue debe redirigir esa ruta al backend y devolver `index.html` para las rutas de Angular. Se requiere el backend JWT, un catálogo de universidades configurado y SMTP real para verificar correos.
-
-Interfaz web del **Sistema de Conexión y Organización de Meetups Académicos y Sociales para Estudiantes Universitarios**, adaptada para Desarrollo Web Integrado (UTP, 2026-2).
-
-## Stack
-
-Angular 21 · TypeScript · Tailwind CSS 4 · RxJS · Vitest. Consume la API del backend con autenticación JWT.
+**Stack:** Angular 21 · TypeScript · Tailwind CSS 4 · RxJS · STOMP (WebSocket) · Vitest.
 
 ## Pantallas
 
-Construidas a partir del diseño del Figma. Solo muestran datos que el backend entrega.
+| Ruta | Qué hace |
+|---|---|
+| `/` | Landing: propuesta, cómo funciona, universidades de la red |
+| `/acceso` | Iniciar sesión y crear cuenta (elige universidad, valida el dominio del correo) |
+| `/olvide` · `/restablecer?token=` | Olvidé mi contraseña y elegir una nueva |
+| `/verificar?token=` | Confirma el correo institucional |
+| `/bienvenida` | Asistente de 4 pasos: foto, género, fecha de nacimiento, carrera, ciclo, sede, intereses y privacidad |
+| `/descubrir` | Sugerencias con porcentaje de afinidad y su explicación; «Pasar», «Me interesa», «Ver perfil» |
+| `/personas/:id` | Perfil de otra persona; conectar, bloquear y reportar |
+| `/conexiones` | Recibidas, enviadas y conectados; aceptar abre el pop-up de match |
+| `/mensajes` | Chat en tiempo real con rompehielos |
+| `/planes` | Planes para dos y grupales: crear, solicitar, invitar, confirmar |
+| `/comunidades` | Comunidades por interés con publicaciones |
+| `/perfil` | Editar foto y datos, cambiar contraseña, bloqueados, cerrar sesión |
 
-| Pantalla | Ruta | Qué hace |
-|---|---|---|
-| Acceso | `/acceso` | Iniciar sesión y crear cuenta con correo institucional |
-| Inicio | `/inicio` | Consultar meetups y solicitudes recibidas; solicitar participación y responder solicitudes |
-| Conexiones | `/conexiones` | Consultar solicitudes recibidas y enviadas y conexiones aceptadas; aceptar, rechazar o cancelar solicitudes |
+## Cómo funciona
+
+- **Afinidad no es match.** El porcentaje solo ordena las sugerencias; un match es una solicitud de conexión aceptada. Al aceptarse, los dos reciben el aviso por WebSocket (`/user/queue/matches`) y ven el pop-up «¡Hay química!».
+- **Sin foto**, se dibuja un monigote según el género elegido.
+- La foto se **recorta en cuadrado y se reduce a 512 px** en el navegador antes de subirla (máximo 1 MB en el servidor).
+- La sesión vive en `sessionStorage`. Un 401 fuera de `/auth` cierra la sesión.
+- Un estudiante sin perfil es enviado a `/bienvenida` por `perfilGuard`.
+- Diseño **responsive**: en móvil hay menú hamburguesa, barra inferior y el chat pasa a lista/conversación.
 
 ## Estructura
 
 ```
 src/app/
-  core/      modelos de la API, autenticación, interceptor del token, guardas y servicios de datos
-  layout/    barra de navegación y contenedor de las pantallas protegidas
-  shared/    tarjeta de meetup, modal de meetup y utilidades de formato
-  pages/     una carpeta por pantalla
+  core/     API tipada, sesión, guardas, personas en caché, tiempo real, avisos y reglas puras (afinidad, edad, universidades)
+  ui/       Avatar, insignia de universidad, modal, selector de foto y campos del perfil
+  layout/   Shell con cabecera, menú lateral móvil y barra inferior
+  pages/    Una carpeta por pantalla
 ```
 
-- El interceptor adjunta el token solo a las peticiones de la API y cierra la sesión ante un 401 en rutas protegidas.
-- Las rutas privadas usan `authGuard`; `/acceso` usa `invitadoGuard`.
-- El token se guarda en `sessionStorage`, así que se pierde al cerrar la pestaña.
+## Desarrollo local
 
-## Cómo ejecutarlo
-
-Requisitos: una versión de Node compatible con Angular 21 y un proxy que envíe `/api` al backend.
+Requiere el backend en `http://localhost:8080` (ver el repo de la API; con `SEED_UNIVERSITIES=true` crea las universidades y los catálogos).
 
 ```bash
-npm install
-npm start
-```
-
-La aplicación queda en <http://localhost:4200>. La URL de la API se configura en `src/environments/environment.ts`.
-
-## Pruebas y compilación
-
-```bash
+npm ci
+npm start        # ng serve con proxy de /api y /ws hacia localhost:8080
 npm test -- --watch=false
 npm run build
 ```
 
-Las pruebas cubren los servicios, el interceptor, las guardas y cada pantalla contra una API simulada.
+`proxy.conf.json` reenvía `/api` y `/ws` al backend, así el navegador usa siempre el mismo origen.
 
-## Repositorios
+## Despliegue
 
-- Frontend: este repositorio.
-- Backend: `Proyecto-Desarrollo-Web-Integrado-Universidad`.
+Al fusionar a `main`, `.github/workflows/deploy.yml` prueba, compila y publica los archivos por `rsync` en la VPS. Nginx sirve la app y reenvía `/api`, `/ws` y Swagger al backend.
+
+> Los logos de las universidades son insignias de color con sus siglas, no los logos oficiales. El proyecto es académico y no está afiliado a ninguna universidad.
