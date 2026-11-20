@@ -9,10 +9,10 @@ import { Avatar } from './avatar';
   imports: [Avatar],
   template: `
     <article class="card overflow-hidden pop">
-      <div class="relative bg-gradient-to-br from-brand-soft to-[#f5f3f8] p-6 sm:p-8 flex flex-col sm:flex-row items-center gap-5 sm:gap-7">
-        <span class="rounded-full ring-[6px] ring-white shadow-lg"><app-avatar [foto]="r().photoUrl" [genero]="r().gender" [nombre]="r().firstName" [tam]="150" /></span>
+      <div class="relative bg-gradient-to-br from-brand-soft to-[#f5f3f8] p-5 sm:p-6 flex flex-col sm:flex-row items-center gap-4 sm:gap-5">
+        <span class="rounded-full ring-[6px] ring-white shadow-lg"><app-avatar [foto]="r().photoUrl" [genero]="r().gender" [nombre]="r().firstName" [tam]="120" /></span>
         <div class="text-center sm:text-left min-w-0 flex-1">
-          <h2 class="font-display font-extrabold text-3xl m-0 leading-tight">{{ r().firstName }} {{ r().lastName.charAt(0) }}.@if (r().age !== null) {<span class="font-semibold text-muted">, {{ r().age }}</span>}</h2>
+          <h2 class="font-display font-extrabold text-2xl sm:text-3xl m-0 leading-tight break-words">{{ r().firstName }} {{ r().lastName.charAt(0) }}.@if (r().age !== null) {<span class="font-semibold text-muted">, {{ r().age }}</span>}</h2>
           <p class="text-muted font-semibold mt-1 mb-0">{{ r().career }} · ciclo {{ r().cycle }}</p>
           @if (r().campus) { <p class="text-sm text-muted mt-0.5 mb-0 flex items-center justify-center sm:justify-start gap-1"><span class="icon !text-[16px]">location_on</span>{{ r().campus }}</p> }
         </div>
