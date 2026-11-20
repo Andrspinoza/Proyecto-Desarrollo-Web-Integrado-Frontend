@@ -6,7 +6,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Api } from '../../core/api.service';
 import { AuthService } from '../../core/auth.service';
 import { Avisos } from '../../core/avisos.service';
-import { MeetupApi, Recomendacion, ResumenEstudiante } from '../../core/api.models';
+import { ConexionApi, MeetupApi, Recomendacion, ResumenEstudiante } from '../../core/api.models';
 import { mensajeDeError } from '../../core/errores';
 import { PersonasService } from '../../core/personas.service';
 import { Avatar } from '../../ui/avatar';
@@ -87,6 +87,26 @@ import { UniBadge } from '../../ui/uni-badge';
       </section>
 
       <aside class="space-y-4 lg:sticky lg:top-24">
+        @if (solicitudes().length > 0) {
+          <div class="card p-5">
+            <h2 class="font-display text-lg font-bold m-0 flex items-center gap-2"><span class="icon icon-fill text-brand">favorite</span> Quieren conectar contigo</h2>
+            <ul class="list-none p-0 m-0 mt-3 space-y-2">
+              @for (c of solicitudes(); track c.id) {
+                <li>
+                  <a [routerLink]="['/personas', c.requesterId]" class="flex items-center gap-3 p-2 rounded-xl no-underline text-ink hover:bg-[#f5f3f8]">
+                    <app-avatar [foto]="personas.de(c.requesterId)?.photoUrl ?? null" [genero]="personas.de(c.requesterId)?.profile?.gender ?? null" [nombre]="personas.nombre(c.requesterId)" [tam]="44" />
+                    <span class="min-w-0 flex-1">
+                      <span class="block font-bold text-sm truncate">{{ personas.nombre(c.requesterId) }}</span>
+                      <span class="block text-xs text-muted truncate">{{ personas.de(c.requesterId)?.profile?.career }}@if (personas.de(c.requesterId)?.profile?.cycle) { · ciclo {{ personas.de(c.requesterId)?.profile?.cycle }} }</span>
+                    </span>
+                    <span class="icon text-muted !text-[20px]">chevron_right</span>
+                  </a>
+                </li>
+              }
+            </ul>
+            <a routerLink="/conexiones" class="btn btn-ghost w-full mt-3">Ver todas las solicitudes</a>
+          </div>
+        }
         <div class="card p-5">
           <h2 class="font-display text-lg font-bold m-0 flex items-center gap-2"><span class="icon icon-fill text-brand">event</span> Planes para dos</h2>
           <p class="text-sm text-muted mt-1 mb-3">Propón algo a una conexión: un café, un partido, estudiar juntos.</p>
@@ -121,6 +141,7 @@ export class Descubrir implements OnInit {
   protected readonly ocupado = signal(false);
   protected readonly error = signal('');
   protected readonly planes = signal<MeetupApi[]>([]);
+  protected readonly solicitudes = signal<ConexionApi[]>([]);
   protected readonly busqueda = signal('');
   protected readonly resultados = signal<ResumenEstudiante[]>([]);
 
@@ -132,6 +153,13 @@ export class Descubrir implements OnInit {
       this.busqueda.set(q.get('q') ?? '');
       if (this.busqueda()) this.buscar();
       else this.cargar();
+    });
+    this.api.recibidas().subscribe({
+      next: (lista) => {
+        this.solicitudes.set(lista.slice(0, 4));
+        this.personas.cargar(lista.slice(0, 4).map((c) => c.requesterId)).subscribe();
+      },
+      error: () => undefined,
     });
     this.api.meetups().subscribe({
       next: (lista) => this.planes.set(lista.filter((m) => m.status === 'SCHEDULED').slice(0, 3)),
