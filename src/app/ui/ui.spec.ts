@@ -46,7 +46,7 @@ describe('UniBadge', () => {
     fixture.detectChanges();
 
     const imagen = fixture.nativeElement.querySelector('img') as HTMLImageElement;
-    expect(imagen.getAttribute('src')).toBe('universidades/pucp.png');
+    expect(imagen.getAttribute('src')).toBe('universidades/pucp.svg');
     expect(imagen.getAttribute('alt')).toBe('Pontificia Universidad Católica del Perú');
   });
 

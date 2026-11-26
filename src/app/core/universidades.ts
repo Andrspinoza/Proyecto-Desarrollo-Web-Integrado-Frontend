@@ -29,7 +29,7 @@ const META: Record<string, MetaUniversidad> = {
     nombre: 'Universidad de Ingeniería y Tecnología',
     fondo: '#00a3b4',
     texto: '#ffffff',
-    logo: 'universidades/utec.jpg',
+    logo: 'universidades/utec.svg',
     sedes: ['Barranco'],
   },
   'aloe.ulima.edu.pe': {
@@ -45,7 +45,7 @@ const META: Record<string, MetaUniversidad> = {
     nombre: 'Universidad San Ignacio de Loyola',
     fondo: '#00539b',
     texto: '#ffffff',
-    logo: 'universidades/usil.gif',
+    logo: 'universidades/usil.png',
     sedes: ['La Molina', 'San Isidro', 'Lima Centro'],
   },
   'upn.edu.pe': {
@@ -53,7 +53,7 @@ const META: Record<string, MetaUniversidad> = {
     nombre: 'Universidad Privada del Norte',
     fondo: '#0a3d91',
     texto: '#ffffff',
-    logo: 'universidades/upn.png',
+    logo: 'universidades/upn.svg',
     sedes: ['Los Olivos', 'Breña', 'San Juan de Lurigancho', 'San Miguel', 'Chorrillos', 'Trujillo', 'Cajamarca'],
   },
   'pucp.edu.pe': {
@@ -61,7 +61,7 @@ const META: Record<string, MetaUniversidad> = {
     nombre: 'Pontificia Universidad Católica del Perú',
     fondo: '#003a70',
     texto: '#ffffff',
-    logo: 'universidades/pucp.png',
+    logo: 'universidades/pucp.svg',
     sedes: ['San Miguel'],
   },
   'ucvvirtual.edu.pe': {
@@ -77,7 +77,7 @@ const META: Record<string, MetaUniversidad> = {
     nombre: 'Universidad Nacional Mayor de San Marcos',
     fondo: '#8b1c23',
     texto: '#ffffff',
-    logo: 'universidades/unmsm.png',
+    logo: 'universidades/unmsm.svg',
     sedes: ['Ciudad Universitaria', 'San Fernando', 'Casona de San Marcos'],
   },
 };
