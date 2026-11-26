@@ -40,12 +40,34 @@ describe('Avatar', () => {
 });
 
 describe('UniBadge', () => {
-  it('muestra la sigla de la universidad', () => {
+  it('muestra el logo de una universidad conocida', () => {
     const fixture = TestBed.createComponent(UniBadge);
     fixture.componentRef.setInput('dominio', 'pucp.edu.pe');
     fixture.detectChanges();
 
+    const imagen = fixture.nativeElement.querySelector('img') as HTMLImageElement;
+    expect(imagen.getAttribute('src')).toBe('universidades/pucp.svg');
+    expect(imagen.getAttribute('alt')).toBe('Pontificia Universidad Católica del Perú');
+  });
+
+  it('vuelve a la sigla si el logo no carga', () => {
+    const fixture = TestBed.createComponent(UniBadge);
+    fixture.componentRef.setInput('dominio', 'pucp.edu.pe');
+    fixture.detectChanges();
+
+    (fixture.nativeElement.querySelector('img') as HTMLImageElement).dispatchEvent(new Event('error'));
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('img')).toBeNull();
     expect((fixture.nativeElement as HTMLElement).textContent?.trim()).toBe('PUCP');
+  });
+
+  it('muestra la sigla de una universidad sin logo', () => {
+    const fixture = TestBed.createComponent(UniBadge);
+    fixture.componentRef.setInput('dominio', 'unalm.edu.pe');
+    fixture.detectChanges();
+
+    expect((fixture.nativeElement as HTMLElement).textContent?.trim()).toBe('UNALM');
   });
 });
 

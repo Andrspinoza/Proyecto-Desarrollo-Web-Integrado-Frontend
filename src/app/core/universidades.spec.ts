@@ -1,11 +1,11 @@
 import { CARRERAS, correoEsDeLaUniversidad, metaUniversidad } from './universidades';
 
 describe('universidades', () => {
-  it('conoce las siete universidades de la red por su dominio', () => {
-    const dominios = ['utp.edu.pe', 'upc.edu.pe', 'utec.edu.pe', 'aloe.ulima.edu.pe', 'usil.pe', 'upn.edu.pe', 'pucp.edu.pe'];
+  it('conoce las nueve universidades de la red por su dominio', () => {
+    const dominios = ['utp.edu.pe', 'upc.edu.pe', 'utec.edu.pe', 'aloe.ulima.edu.pe', 'usil.pe', 'upn.edu.pe', 'pucp.edu.pe', 'ucvvirtual.edu.pe', 'unmsm.edu.pe'];
     const siglas = dominios.map((d) => metaUniversidad(d).sigla);
 
-    expect(siglas).toEqual(['UTP', 'UPC', 'UTEC', 'ULIMA', 'USIL', 'UPN', 'PUCP']);
+    expect(siglas).toEqual(['UTP', 'UPC', 'UTEC', 'ULIMA', 'USIL', 'UPN', 'PUCP', 'UCV', 'UNMSM']);
   });
 
   it('usa una insignia genérica con las iniciales para un dominio desconocido', () => {
@@ -15,13 +15,20 @@ describe('universidades', () => {
     expect(meta.sedes).toEqual([]);
   });
 
+  it('cada universidad conocida tiene su logo y la genérica no', () => {
+    for (const dominio of ['utp.edu.pe', 'upc.edu.pe', 'utec.edu.pe', 'aloe.ulima.edu.pe', 'usil.pe', 'upn.edu.pe', 'pucp.edu.pe', 'ucvvirtual.edu.pe', 'unmsm.edu.pe']) {
+      expect(metaUniversidad(dominio).logo).toMatch(/^universidades\//);
+    }
+    expect(metaUniversidad('unalm.edu.pe').logo).toBeNull();
+  });
+
   it('no falla sin dominio', () => {
     expect(metaUniversidad(null).sigla).toBe('UNI');
     expect(metaUniversidad(undefined).sigla).toBe('UNI');
   });
 
   it('cada universidad tiene al menos una sede sugerida', () => {
-    for (const dominio of ['utp.edu.pe', 'upc.edu.pe', 'utec.edu.pe', 'aloe.ulima.edu.pe', 'usil.pe', 'upn.edu.pe', 'pucp.edu.pe']) {
+    for (const dominio of ['utp.edu.pe', 'upc.edu.pe', 'utec.edu.pe', 'aloe.ulima.edu.pe', 'usil.pe', 'upn.edu.pe', 'pucp.edu.pe', 'ucvvirtual.edu.pe', 'unmsm.edu.pe']) {
       expect(metaUniversidad(dominio).sedes.length).toBeGreaterThan(0);
     }
   });
