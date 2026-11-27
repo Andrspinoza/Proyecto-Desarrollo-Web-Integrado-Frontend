@@ -80,6 +80,14 @@ const META: Record<string, MetaUniversidad> = {
     logo: 'universidades/unmsm.svg',
     sedes: ['Ciudad Universitaria', 'San Fernando', 'Casona de San Marcos'],
   },
+  'uwiener.edu.pe': {
+    sigla: 'UNW',
+    nombre: 'Universidad Privada Norbert Wiener',
+    fondo: '#0a2540',
+    texto: '#ffffff',
+    logo: 'universidades/uwiener.svg',
+    sedes: ['Lima Centro'],
+  },
 };
 
 const GENERICA: MetaUniversidad = {
