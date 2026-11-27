@@ -9,6 +9,7 @@ import { PersonasService } from '../core/personas.service';
 import { TiempoReal } from '../core/tiempo-real.service';
 import { Avatar } from '../ui/avatar';
 import { UniBadge } from '../ui/uni-badge';
+import { TemaToggle } from '../ui/tema-toggle';
 
 interface Enlace {
   ruta: string;
@@ -19,9 +20,9 @@ interface Enlace {
 @Component({
   selector: 'app-shell',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, Avatar, UniBadge],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, Avatar, UniBadge, TemaToggle],
   template: `
-    <header class="fixed top-0 inset-x-0 z-50 bg-white/90 backdrop-blur-md border-b border-line">
+    <header class="fixed top-0 inset-x-0 z-50 bg-surface/90 backdrop-blur-md border-b border-line">
       <div class="h-14 lg:h-16 max-w-[1200px] mx-auto px-3 lg:px-6 flex items-center gap-2 lg:gap-6">
         <button type="button" class="lg:hidden btn btn-ghost !min-h-10 !w-10 !px-0" aria-label="Abrir menú" [attr.aria-expanded]="menuAbierto()" (click)="menuAbierto.set(true)">
           <span class="icon">menu</span>
@@ -33,12 +34,12 @@ interface Enlace {
 
         <form class="hidden md:flex flex-1 max-w-sm relative" role="search" (submit)="buscar($event)">
           <span class="icon absolute left-3 top-1/2 -translate-y-1/2 text-muted !text-[20px]">search</span>
-          <input name="q" type="search" class="field !min-h-10 !pl-10 !rounded-full !bg-[#f5f3f8] !border-transparent" placeholder="Buscar estudiantes de tu universidad" [value]="texto()" (input)="texto.set($any($event.target).value)" aria-label="Buscar estudiantes" />
+          <input name="q" type="search" class="field !min-h-10 !pl-10 !rounded-full !bg-subtle !border-transparent" placeholder="Buscar estudiantes de tu universidad" [value]="texto()" (input)="texto.set($any($event.target).value)" aria-label="Buscar estudiantes" />
         </form>
 
         <nav class="hidden lg:flex items-center gap-1 ml-auto" aria-label="Principal">
           @for (e of enlaces; track e.ruta) {
-            <a [routerLink]="e.ruta" routerLinkActive="!text-brand !bg-brand-soft" class="relative flex items-center gap-2 px-3 h-10 rounded-full text-sm font-bold text-muted no-underline hover:bg-[#f5f3f8]">
+            <a [routerLink]="e.ruta" routerLinkActive="!text-brand !bg-brand-soft" class="relative flex items-center gap-2 px-3 h-10 rounded-full text-sm font-bold text-muted no-underline hover:bg-subtle">
               <span class="icon !text-[20px]">{{ e.icono }}</span>{{ e.texto }}
               @if (e.ruta === '/conexiones' && pendientes() > 0) { <span class="min-w-5 h-5 px-1 rounded-full bg-brand text-white text-[11px] flex items-center justify-center">{{ pendientes() }}</span> }
               @if (e.ruta === '/mensajes' && sinLeer() > 0) { <span class="min-w-5 h-5 px-1 rounded-full bg-brand text-white text-[11px] flex items-center justify-center">{{ sinLeer() }}</span> }
@@ -47,11 +48,12 @@ interface Enlace {
         </nav>
 
         <div class="flex items-center gap-1 lg:gap-2 ml-auto lg:ml-0">
+          <app-tema-toggle />
           <a routerLink="/conexiones" class="relative btn btn-ghost !min-h-10 !w-10 !px-0 lg:!hidden" aria-label="Solicitudes de conexión">
             <span class="icon">notifications</span>
             @if (pendientes() + sinLeer() > 0) { <span class="absolute -top-1 -right-1 min-w-5 h-5 px-1 rounded-full bg-brand text-white text-[11px] flex items-center justify-center">{{ pendientes() + sinLeer() }}</span> }
           </a>
-          <a routerLink="/perfil" class="hidden lg:flex items-center gap-2 no-underline rounded-full pl-1 pr-3 h-11 hover:bg-[#f5f3f8]" aria-label="Mi perfil">
+          <a routerLink="/perfil" class="hidden lg:flex items-center gap-2 no-underline rounded-full pl-1 pr-3 h-11 hover:bg-subtle" aria-label="Mi perfil">
             <app-avatar [foto]="auth.yo()?.photoUrl ?? null" [genero]="auth.yo()?.profile?.gender ?? null" [nombre]="auth.nombre()" [tam]="36" />
             <span class="text-sm font-bold text-ink">{{ auth.nombre() }}</span>
           </a>
@@ -61,8 +63,8 @@ interface Enlace {
 
     @if (menuAbierto()) {
       <div class="fixed inset-0 z-[60] lg:hidden" role="dialog" aria-modal="true" aria-label="Menú">
-        <button type="button" class="absolute inset-0 bg-[#172b4d]/55 border-0" aria-label="Cerrar menú" (click)="menuAbierto.set(false)"></button>
-        <aside class="rise absolute left-0 top-0 bottom-0 w-[84%] max-w-[320px] bg-white shadow-2xl flex flex-col">
+        <button type="button" class="absolute inset-0 bg-black/55 border-0" aria-label="Cerrar menú" (click)="menuAbierto.set(false)"></button>
+        <aside class="rise absolute left-0 top-0 bottom-0 w-[84%] max-w-[320px] bg-surface shadow-2xl flex flex-col">
           <div class="p-5 bg-brand-soft border-b border-line">
             <div class="flex items-center gap-3">
               <app-avatar [foto]="auth.yo()?.photoUrl ?? null" [genero]="auth.yo()?.profile?.gender ?? null" [nombre]="auth.nombre()" [tam]="56" />
@@ -78,7 +80,7 @@ interface Enlace {
           </div>
           <nav class="flex-1 overflow-y-auto p-3" aria-label="Menú móvil">
             @for (e of menuMovil(); track e.ruta) {
-              <a [routerLink]="e.ruta" routerLinkActive="!bg-brand-soft !text-brand" class="flex items-center gap-3 px-4 h-12 rounded-xl text-[15px] font-bold text-ink no-underline hover:bg-[#f5f3f8]">
+              <a [routerLink]="e.ruta" routerLinkActive="!bg-brand-soft !text-brand" class="flex items-center gap-3 px-4 h-12 rounded-xl text-[15px] font-bold text-ink no-underline hover:bg-subtle">
                 <span class="icon">{{ e.icono }}</span>{{ e.texto }}
               </a>
             }
@@ -96,7 +98,7 @@ interface Enlace {
       </div>
     </main>
 
-    <nav class="lg:hidden fixed bottom-0 inset-x-0 z-50 bg-white border-t border-line pb-[env(safe-area-inset-bottom)]" aria-label="Navegación inferior">
+    <nav class="lg:hidden fixed bottom-0 inset-x-0 z-50 bg-surface border-t border-line pb-[env(safe-area-inset-bottom)]" aria-label="Navegación inferior">
       <div class="grid grid-cols-5 h-16 max-w-xl mx-auto">
         @for (e of barraInferior; track e.ruta) {
           <a [routerLink]="e.ruta" routerLinkActive="!text-brand" class="relative flex flex-col items-center justify-center gap-0.5 text-[11px] font-bold text-muted no-underline">

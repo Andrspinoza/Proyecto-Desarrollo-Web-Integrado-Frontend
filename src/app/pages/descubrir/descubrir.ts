@@ -25,7 +25,7 @@ import { UniBadge } from '../../ui/uni-badge';
           <p class="font-display font-bold text-lg mt-3 mb-0">{{ auth.yo()?.firstName }} {{ auth.yo()?.lastName }}</p>
           <p class="text-sm text-muted m-0">{{ auth.yo()?.profile?.career }} · ciclo {{ auth.yo()?.profile?.cycle }}</p>
         </div>
-        <div class="flex items-center gap-2 mt-4 p-3 rounded-xl bg-[#f5f3f8]">
+        <div class="flex items-center gap-2 mt-4 p-3 rounded-xl bg-subtle">
           <app-uni-badge [dominio]="auth.universidad()?.emailDomain ?? null" [tam]="34" />
           <span class="text-xs font-bold leading-tight">{{ auth.universidad()?.name }}</span>
         </div>
@@ -93,7 +93,7 @@ import { UniBadge } from '../../ui/uni-badge';
             <ul class="list-none p-0 m-0 mt-3 space-y-2">
               @for (c of solicitudes(); track c.id) {
                 <li>
-                  <a [routerLink]="['/personas', c.requesterId]" class="flex items-center gap-3 p-2 rounded-xl no-underline text-ink hover:bg-[#f5f3f8]">
+                  <a [routerLink]="['/personas', c.requesterId]" class="flex items-center gap-3 p-2 rounded-xl no-underline text-ink hover:bg-subtle">
                     <app-avatar [foto]="personas.de(c.requesterId)?.photoUrl ?? null" [genero]="personas.de(c.requesterId)?.profile?.gender ?? null" [nombre]="personas.nombre(c.requesterId)" [tam]="44" />
                     <span class="min-w-0 flex-1">
                       <span class="block font-bold text-sm truncate">{{ personas.nombre(c.requesterId) }}</span>
@@ -113,7 +113,7 @@ import { UniBadge } from '../../ui/uni-badge';
           @if (planes().length === 0) { <p class="text-sm text-muted m-0">Todavía no hay planes publicados en tu universidad.</p> }
           <ul class="list-none p-0 m-0 space-y-2">
             @for (m of planes(); track m.id) {
-              <li class="p-3 rounded-xl bg-[#f5f3f8]">
+              <li class="p-3 rounded-xl bg-subtle">
                 <p class="m-0 font-bold text-sm leading-snug">{{ m.title }}</p>
                 <p class="m-0 text-xs text-muted mt-0.5">{{ m.scheduledAt | date: "EEE d MMM, h:mm a" }} · {{ m.place.district }}</p>
               </li>

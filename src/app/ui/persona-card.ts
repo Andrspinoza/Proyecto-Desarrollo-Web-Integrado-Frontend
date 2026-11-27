@@ -9,8 +9,8 @@ import { Avatar } from './avatar';
   imports: [Avatar],
   template: `
     <article class="card overflow-hidden pop">
-      <div class="relative bg-gradient-to-br from-brand-soft to-[#f5f3f8] p-5 sm:p-6 flex flex-col sm:flex-row items-center gap-4 sm:gap-5">
-        <span class="rounded-full ring-[6px] ring-white shadow-lg"><app-avatar [foto]="r().photoUrl" [genero]="r().gender" [nombre]="r().firstName" [tam]="120" /></span>
+      <div class="relative bg-gradient-to-br from-brand-soft to-subtle p-5 sm:p-6 flex flex-col sm:flex-row items-center gap-4 sm:gap-5">
+        <span class="rounded-full ring-[6px] ring-surface shadow-lg"><app-avatar [foto]="r().photoUrl" [genero]="r().gender" [nombre]="r().firstName" [tam]="120" /></span>
         <div class="text-center sm:text-left min-w-0 flex-1">
           <h2 class="font-display font-extrabold text-2xl sm:text-3xl m-0 leading-tight break-words">{{ r().firstName }} {{ r().lastName.charAt(0) }}.@if (r().age !== null) {<span class="font-semibold text-muted">, {{ r().age }}</span>}</h2>
           <p class="text-muted font-semibold mt-1 mb-0">{{ r().career }} · ciclo {{ r().cycle }}</p>
@@ -18,7 +18,7 @@ import { Avatar } from './avatar';
         </div>
         <div class="flex flex-col items-center shrink-0" [attr.aria-label]="'Afinidad ' + r().affinityPercent + ' por ciento'">
           <div class="relative w-[86px] h-[86px] rounded-full grid place-items-center" [style.background]="anillo()">
-            <div class="w-[68px] h-[68px] rounded-full bg-white grid place-items-center">
+            <div class="w-[68px] h-[68px] rounded-full bg-surface grid place-items-center">
               <span class="font-display font-extrabold text-2xl leading-none" [class.text-brand]="nivel() !== 'baja'" [class.text-muted]="nivel() === 'baja'">{{ r().affinityPercent }}%</span>
             </div>
           </div>
@@ -52,5 +52,5 @@ export class PersonaCard {
 
   protected readonly nivel = computed(() => nivelAfinidad(this.r().affinityPercent));
   protected readonly explicacion = computed(() => explicarAfinidad(this.r()));
-  protected readonly anillo = computed(() => `conic-gradient(var(--color-brand) ${this.r().affinityPercent * 3.6}deg, #ece7f1 0)`);
+  protected readonly anillo = computed(() => `conic-gradient(var(--color-brand) ${this.r().affinityPercent * 3.6}deg, var(--color-mist) 0)`);
 }

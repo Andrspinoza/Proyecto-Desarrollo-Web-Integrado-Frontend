@@ -58,7 +58,7 @@ import { Modal } from '../../ui/modal';
         @if (posts().length === 0) { <p class="text-muted text-center m-0 py-4">Aún no hay publicaciones.</p> }
         <ul class="list-none p-0 m-0 space-y-3">
           @for (p of posts(); track p.id) {
-            <li class="p-3 rounded-xl bg-[#f5f3f8]">
+            <li class="p-3 rounded-xl bg-subtle">
               <p class="m-0 text-xs font-bold text-muted">{{ personas.nombre(p.authorId) }} · {{ p.createdAt | date: 'd MMM, h:mm a' }}</p>
               <p class="m-0 mt-1 leading-relaxed break-words">{{ p.content }}</p>
             </li>

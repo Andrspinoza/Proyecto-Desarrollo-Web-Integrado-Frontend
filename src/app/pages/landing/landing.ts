@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { metaUniversidad } from '../../core/universidades';
+import { TemaToggle } from '../../ui/tema-toggle';
 
 interface PerfilEjemplo {
   foto: string;
@@ -15,9 +16,9 @@ interface PerfilEjemplo {
 @Component({
   selector: 'app-landing',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink],
+  imports: [RouterLink, TemaToggle],
   template: `
-    <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-line">
+    <header class="sticky top-0 z-40 bg-surface/90 backdrop-blur-md border-b border-line">
       <div class="max-w-[1200px] mx-auto h-14 sm:h-16 px-4 sm:px-6 flex items-center justify-between gap-3">
         <a routerLink="/" class="flex items-center gap-2 no-underline text-brand font-display font-bold text-xl">
           <img src="logo-quesale-naranja.png" alt="" class="h-9 w-9 object-contain" /> ¿Qué sale?
@@ -28,6 +29,7 @@ interface PerfilEjemplo {
           <a href="#por-que" (click)="irA($event, 'por-que')" class="text-muted hover:text-ink no-underline">Por qué ¿Qué sale?</a>
         </nav>
         <nav class="flex items-center gap-2" aria-label="Acceso">
+          <app-tema-toggle />
           <a routerLink="/acceso" class="btn btn-ghost !min-h-10">Iniciar sesión</a>
           <a routerLink="/acceso" [queryParams]="{ modo: 'registro' }" class="btn btn-primary !min-h-10 hidden sm:inline-flex">Crear cuenta</a>
         </nav>
@@ -35,7 +37,7 @@ interface PerfilEjemplo {
     </header>
 
     <main>
-      <section class="overflow-hidden bg-[radial-gradient(ellipse_at_top_right,#fff0e6,transparent_60%)]">
+      <section class="overflow-hidden bg-[radial-gradient(ellipse_at_top_right,var(--color-brand-soft),transparent_60%)]">
         <div class="max-w-[1200px] mx-auto px-4 sm:px-6 py-10 sm:py-14 lg:py-20 grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           <div>
             <p class="chip chip-on !text-[13px] mb-4"><span class="icon !text-[16px]">school</span> Por y para estudiantes universitarios</p>
@@ -52,7 +54,7 @@ interface PerfilEjemplo {
             <div class="absolute inset-x-0 top-4 bottom-10 rounded-[2rem] bg-brand-soft -rotate-3" aria-hidden="true"></div>
 
             <span
-              class="absolute z-10 top-0 right-2 sm:-right-3 rounded-2xl rounded-br-md bg-ink text-white font-bold text-sm px-4 py-2.5 shadow-lg rotate-2 transition-opacity duration-300"
+              class="absolute z-10 top-0 right-2 sm:-right-3 rounded-2xl rounded-br-md bg-night text-white font-bold text-sm px-4 py-2.5 shadow-lg rotate-2 transition-opacity duration-300"
               [class.opacity-0]="cambiando()"
               aria-hidden="true"
               >{{ frase() }}</span
@@ -90,7 +92,7 @@ interface PerfilEjemplo {
             </div>
 
             <div class="absolute bottom-0 left-1/2 -translate-x-1/2 flex items-center gap-2" role="group" aria-label="Perfiles de ejemplo">
-              <button type="button" class="w-8 h-8 rounded-full grid place-items-center text-muted hover:bg-white hover:text-brand" (click)="anterior()" aria-label="Perfil anterior">
+              <button type="button" class="w-8 h-8 rounded-full grid place-items-center text-muted hover:bg-surface hover:text-brand" (click)="anterior()" aria-label="Perfil anterior">
                 <span class="icon">chevron_left</span>
               </button>
               @for (p of perfiles; track p.nombre; let i = $index) {
@@ -105,7 +107,7 @@ interface PerfilEjemplo {
                   [attr.aria-label]="'Ver a ' + p.nombre"
                 ></button>
               }
-              <button type="button" class="w-8 h-8 rounded-full grid place-items-center text-muted hover:bg-white hover:text-brand" (click)="siguiente()" aria-label="Perfil siguiente">
+              <button type="button" class="w-8 h-8 rounded-full grid place-items-center text-muted hover:bg-surface hover:text-brand" (click)="siguiente()" aria-label="Perfil siguiente">
                 <span class="icon">chevron_right</span>
               </button>
             </div>
@@ -113,7 +115,7 @@ interface PerfilEjemplo {
         </div>
       </section>
 
-      <section id="universidades" class="scroll-mt-16 bg-white border-y border-line">
+      <section id="universidades" class="scroll-mt-16 bg-surface border-y border-line">
         <div class="max-w-[1200px] mx-auto px-4 sm:px-6 py-12 sm:py-16">
           <div class="text-center">
             <p class="chip chip-on !text-[13px] m-0"><span class="icon !text-[16px]">account_balance</span> Universidades</p>
@@ -156,7 +158,7 @@ interface PerfilEjemplo {
         </div>
       </section>
 
-      <section id="por-que" class="scroll-mt-16 bg-white border-y border-line">
+      <section id="por-que" class="scroll-mt-16 bg-surface border-y border-line">
         <div class="max-w-[1200px] mx-auto px-4 sm:px-6 py-12 sm:py-16">
           <div class="text-center">
             <p class="chip chip-on !text-[13px] m-0"><span class="icon !text-[16px]">auto_awesome</span> Por qué ¿Qué sale?</p>
@@ -175,7 +177,7 @@ interface PerfilEjemplo {
       </section>
 
       <section class="px-4 sm:px-6 py-14">
-        <div class="max-w-[1200px] mx-auto rounded-3xl bg-ink text-white p-8 sm:p-12 text-center">
+        <div class="max-w-[1200px] mx-auto rounded-3xl bg-night text-white p-8 sm:p-12 text-center">
           <h2 class="font-display text-3xl sm:text-4xl font-bold m-0 text-white">¿Qué sale hoy?</h2>
           <p class="text-white/75 mt-3 mb-6">Crea tu cuenta en un minuto y encuentra a tu gente.</p>
           <a routerLink="/acceso" [queryParams]="{ modo: 'registro' }" class="btn btn-primary !min-h-12 !text-base">Empezar ahora</a>
@@ -183,7 +185,7 @@ interface PerfilEjemplo {
       </section>
     </main>
 
-    <footer class="border-t border-line bg-white">
+    <footer class="border-t border-line bg-surface">
       <div class="max-w-[1200px] mx-auto px-4 sm:px-6 py-6 text-xs text-muted flex flex-col sm:flex-row gap-2 justify-between">
         <span>© 2026 ¿Qué sale? · Los logos son marcas de sus respectivas universidades.</span>
         <span>Por y para estudiantes universitarios</span>

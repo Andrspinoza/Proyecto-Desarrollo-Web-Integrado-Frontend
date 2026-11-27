@@ -22,10 +22,10 @@ type Pestana = 'recibidas' | 'enviadas' | 'conectados';
       <h1 class="font-display font-extrabold text-3xl m-0">Conexiones</h1>
       <p class="text-muted mt-1 mb-5">Solo cuando los dos aceptan pueden conversar y proponer un plan.</p>
 
-      <div class="grid grid-cols-3 gap-1 p-1 rounded-xl bg-[#ece7f1] mb-5" role="tablist">
+      <div class="grid grid-cols-3 gap-1 p-1 rounded-xl bg-mist mb-5" role="tablist">
         @for (p of pestanas; track p.id) {
           <button type="button" role="tab" [attr.aria-selected]="pestana() === p.id" class="btn !min-h-10 !px-2 border-0 !text-[13px] sm:!text-sm" [class.btn-primary]="pestana() === p.id" [class.!bg-transparent]="pestana() !== p.id" [class.btn-ghost]="pestana() !== p.id" (click)="pestana.set(p.id)">
-            {{ p.texto }}@if (cuenta(p.id) > 0) { <span class="min-w-5 h-5 px-1 rounded-full text-[11px] flex items-center justify-center" [class.bg-white]="pestana() === p.id" [class.text-brand]="pestana() === p.id" [class.bg-brand]="pestana() !== p.id" [class.text-white]="pestana() !== p.id">{{ cuenta(p.id) }}</span> }
+            {{ p.texto }}@if (cuenta(p.id) > 0) { <span class="min-w-5 h-5 px-1 rounded-full text-[11px] flex items-center justify-center" [class.bg-surface]="pestana() === p.id" [class.text-brand]="pestana() === p.id" [class.bg-brand]="pestana() !== p.id" [class.text-white]="pestana() !== p.id">{{ cuenta(p.id) }}</span> }
           </button>
         }
       </div>

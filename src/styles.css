@@ -13,12 +13,39 @@
   --color-danger: #d92d3a;
   --color-danger-soft: #fdecee;
   --color-warn-soft: #fff4e0;
+  --color-surface: #ffffff;
+  --color-subtle: #f5f3f8;
+  --color-mist: #ece7f1;
+  --color-chip: #f1f3fa;
+  --color-brand-line: #f3c9ad;
+  --color-night: #172b4d;
   --font-display: Outfit, sans-serif;
   --font-sans: Manrope, sans-serif;
   --radius-card: 14px;
 }
 
 @layer base {
+  html.oscuro {
+    color-scheme: dark;
+    --color-brand: #e0601f;
+    --color-brand-dark: #f5894d;
+    --color-brand-soft: #3a2418;
+    --color-brand-line: #6b3a20;
+    --color-ink: #e8eaf0;
+    --color-muted: #a3acbd;
+    --color-line: #2c3242;
+    --color-canvas: #12151c;
+    --color-surface: #1b1f2a;
+    --color-subtle: #232836;
+    --color-mist: #2a3040;
+    --color-chip: #262c3a;
+    --color-night: #252d40;
+    --color-ok: #34c77b;
+    --color-ok-soft: #133024;
+    --color-danger: #ff6b76;
+    --color-danger-soft: #3a1a1e;
+    --color-warn-soft: #3a2e15;
+  }
   html {
     font-family: Manrope, sans-serif;
     color: var(--color-ink);
@@ -49,7 +76,7 @@
 
 @layer components {
   .card {
-    background: #fff;
+    background: var(--color-surface);
     border: 1px solid var(--color-line);
     border-radius: var(--radius-card);
     box-shadow: 0 1px 3px rgb(23 43 77 / 0.05);
@@ -84,7 +111,7 @@
     background: var(--color-brand-dark);
   }
   .btn-ghost {
-    background: #fff;
+    background: var(--color-surface);
     color: var(--color-ink);
     border-color: var(--color-line);
   }
@@ -101,7 +128,7 @@
     padding: 0 0.9rem;
     border-radius: 12px;
     border: 1px solid var(--color-line);
-    background: #fff;
+    background: var(--color-surface);
     font: inherit;
     color: var(--color-ink);
   }
@@ -129,14 +156,14 @@
     border-radius: 999px;
     font-size: 0.78rem;
     font-weight: 700;
-    background: #f1f3fa;
+    background: var(--color-chip);
     color: var(--color-muted);
     border: 1px solid transparent;
   }
   .chip-on {
     background: var(--color-brand-soft);
     color: var(--color-brand-dark);
-    border-color: #f3c9ad;
+    border-color: var(--color-brand-line);
   }
   .error-text {
     color: var(--color-danger);

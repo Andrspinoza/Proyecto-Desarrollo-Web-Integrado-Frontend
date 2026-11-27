@@ -15,7 +15,7 @@ type Modo = 'login' | 'registro';
   imports: [RouterLink, UniBadge],
   template: `
     <div class="min-h-dvh grid lg:grid-cols-2">
-      <aside class="hidden lg:flex flex-col justify-between p-12 bg-[radial-gradient(ellipse_at_bottom_left,#fff0e6,#fcfafc_70%)] border-r border-line">
+      <aside class="hidden lg:flex flex-col justify-between p-12 bg-[radial-gradient(ellipse_at_bottom_left,var(--color-brand-soft),var(--color-canvas)_70%)] border-r border-line">
         <a routerLink="/" class="flex items-center gap-2 no-underline text-brand font-display font-bold text-2xl"><img src="logo-quesale-naranja.png" alt="" class="h-10 w-10" /> ¿Qué sale?</a>
         <div>
           <h1 class="font-display font-extrabold text-5xl leading-[1.05] m-0">Encuentra a tu gente <span class="text-brand">en tu universidad.</span></h1>
@@ -45,7 +45,7 @@ type Modo = 'login' | 'registro';
             </div>
           } @else {
             <div class="card p-5 sm:p-7">
-              <div class="grid grid-cols-2 gap-1 p-1 rounded-xl bg-[#f5f3f8] mb-6" role="tablist">
+              <div class="grid grid-cols-2 gap-1 p-1 rounded-xl bg-subtle mb-6" role="tablist">
                 <button type="button" role="tab" [attr.aria-selected]="modo() === 'login'" class="btn !min-h-10 border-0" [class.btn-primary]="modo() === 'login'" [class.btn-ghost]="modo() !== 'login'" [class.!bg-transparent]="modo() !== 'login'" (click)="cambiar('login')">Iniciar sesión</button>
                 <button type="button" role="tab" [attr.aria-selected]="modo() === 'registro'" class="btn !min-h-10 border-0" [class.btn-primary]="modo() === 'registro'" [class.btn-ghost]="modo() !== 'registro'" [class.!bg-transparent]="modo() !== 'registro'" (click)="cambiar('registro')">Crear cuenta</button>
               </div>

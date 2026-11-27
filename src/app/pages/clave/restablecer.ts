@@ -9,7 +9,7 @@ import { mensajeDeError } from '../../core/errores';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterLink],
   template: `
-    <main class="min-h-dvh flex flex-col items-center justify-center px-4 py-10 bg-[radial-gradient(ellipse_at_top,#fff0e6,#fcfafc_60%)]">
+    <main class="min-h-dvh flex flex-col items-center justify-center px-4 py-10 bg-[radial-gradient(ellipse_at_top,var(--color-brand-soft),var(--color-canvas)_60%)]">
       <a routerLink="/" class="flex items-center gap-2 no-underline text-brand font-display font-bold text-xl mb-6"><img src="logo-quesale-naranja.png" alt="" class="h-9 w-9" /> ¿Qué sale?</a>
       <div class="card w-full max-w-md p-6 sm:p-8">
         @if (listo()) {
