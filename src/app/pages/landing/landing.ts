@@ -255,6 +255,7 @@ export class Landing {
     { dominio: 'ucvvirtual.edu.pe', alto: 32 },
     { dominio: 'unmsm.edu.pe', alto: 30 },
     { dominio: 'uwiener.edu.pe', alto: 26 },
+    { dominio: 'unitru.edu.pe', alto: 52 },
   ].map((u) => ({ ...u, meta: metaUniversidad(u.dominio) }));
 
   protected readonly pasos = [

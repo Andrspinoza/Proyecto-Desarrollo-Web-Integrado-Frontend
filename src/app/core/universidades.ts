@@ -88,6 +88,14 @@ const META: Record<string, MetaUniversidad> = {
     logo: 'universidades/uwiener.svg',
     sedes: ['Lima Centro'],
   },
+  'unitru.edu.pe': {
+    sigla: 'UNT',
+    nombre: 'Universidad Nacional de Trujillo',
+    fondo: '#a6192e',
+    texto: '#ffffff',
+    logo: 'universidades/unt.png',
+    sedes: ['Ciudad Universitaria', 'Huamachuco', 'Valle Jequetepeque', 'Santiago de Chuco'],
+  },
 };
 
 const GENERICA: MetaUniversidad = {
