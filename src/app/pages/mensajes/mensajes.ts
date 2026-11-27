@@ -31,7 +31,7 @@ import { Avatar } from '../../ui/avatar';
           <ul class="list-none p-0 m-0">
             @for (id of contactos(); track id) {
               <li>
-                <button type="button" class="w-full flex items-center gap-3 px-4 py-3 text-left bg-transparent border-0 cursor-pointer hover:bg-[#f5f3f8]" [class.bg-brand-soft]="seleccionado() === id" (click)="elegir(id)">
+                <button type="button" class="w-full flex items-center gap-3 px-4 py-3 text-left bg-transparent border-0 cursor-pointer hover:bg-subtle" [class.bg-brand-soft]="seleccionado() === id" (click)="elegir(id)">
                   <app-avatar [foto]="personas.de(id)?.photoUrl ?? null" [genero]="personas.de(id)?.profile?.gender ?? null" [nombre]="personas.nombre(id)" [tam]="46" />
                   <span class="min-w-0"><span class="block font-bold truncate">{{ personas.nombre(id) }}</span><span class="block text-xs text-muted truncate">{{ personas.de(id)?.profile?.career }}</span></span>
                 </button>
@@ -50,7 +50,7 @@ import { Avatar } from '../../ui/avatar';
             <a routerLink="/planes" class="btn btn-ghost !min-h-10"><span class="icon !text-[20px]">event</span><span class="hidden sm:inline">Proponer un plan</span></a>
           </header>
 
-          <div #hilo class="flex-1 overflow-y-auto p-4 space-y-2 bg-[#faf8fb]" aria-live="polite">
+          <div #hilo class="flex-1 overflow-y-auto p-4 space-y-2 bg-canvas" aria-live="polite">
             @if (mensajes().length === 0) {
               <div class="text-center py-8">
                 <p class="font-bold m-0">Rompe el hielo con {{ personas.de(id)?.firstName }}</p>
@@ -61,14 +61,14 @@ import { Avatar } from '../../ui/avatar';
             }
             @for (m of mensajes(); track m.id) {
               <div class="flex" [class.justify-end]="m.senderId === auth.yo()?.id">
-                <div class="max-w-[82%] px-3.5 py-2 rounded-2xl text-[15px] leading-snug break-words" [class.bg-brand]="m.senderId === auth.yo()?.id" [class.text-white]="m.senderId === auth.yo()?.id" [class.rounded-br-md]="m.senderId === auth.yo()?.id" [class.bg-white]="m.senderId !== auth.yo()?.id" [class.border]="m.senderId !== auth.yo()?.id" [class.border-line]="m.senderId !== auth.yo()?.id" [class.rounded-bl-md]="m.senderId !== auth.yo()?.id">
+                <div class="max-w-[82%] px-3.5 py-2 rounded-2xl text-[15px] leading-snug break-words" [class.bg-brand]="m.senderId === auth.yo()?.id" [class.text-white]="m.senderId === auth.yo()?.id" [class.rounded-br-md]="m.senderId === auth.yo()?.id" [class.bg-surface]="m.senderId !== auth.yo()?.id" [class.border]="m.senderId !== auth.yo()?.id" [class.border-line]="m.senderId !== auth.yo()?.id" [class.rounded-bl-md]="m.senderId !== auth.yo()?.id">
                   {{ m.content }}<span class="block text-[10px] mt-0.5 opacity-70 text-right">{{ m.sentAt | date: 'h:mm a' }}</span>
                 </div>
               </div>
             }
           </div>
 
-          <form class="flex gap-2 p-3 border-t border-line bg-white" (submit)="enviar($event)">
+          <form class="flex gap-2 p-3 border-t border-line bg-surface" (submit)="enviar($event)">
             <input class="field flex-1" name="mensaje" maxlength="1000" autocomplete="off" placeholder="Escribe un mensaje…" aria-label="Mensaje" [value]="texto()" (input)="texto.set($any($event.target).value)" />
             <button type="submit" class="btn btn-primary !min-w-12 !px-3" [disabled]="enviando() || !texto().trim()" aria-label="Enviar"><span class="icon icon-fill">send</span></button>
           </form>

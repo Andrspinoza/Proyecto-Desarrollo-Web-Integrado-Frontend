@@ -16,7 +16,7 @@ import { CamposAcademicos, CamposGustos, CamposPersonales, CamposSobreTi } from 
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FotoSelector, CamposPersonales, CamposAcademicos, CamposGustos, CamposSobreTi],
   template: `
-    <main class="min-h-dvh bg-[radial-gradient(ellipse_at_top,#fff0e6,#fcfafc_55%)] px-4 py-6 sm:py-10">
+    <main class="min-h-dvh bg-[radial-gradient(ellipse_at_top,var(--color-brand-soft),var(--color-canvas)_55%)] px-4 py-6 sm:py-10">
       <div class="max-w-xl mx-auto">
         <div class="flex items-center justify-between mb-5">
           <span class="flex items-center gap-2 text-brand font-display font-bold text-xl"><img src="logo-quesale-naranja.png" alt="" class="h-9 w-9" /> ¿Qué sale?</span>

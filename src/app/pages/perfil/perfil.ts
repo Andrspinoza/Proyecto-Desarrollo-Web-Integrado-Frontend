@@ -21,7 +21,7 @@ import { UniBadge } from '../../ui/uni-badge';
   template: `
     <div class="max-w-3xl mx-auto space-y-5">
       <section class="card overflow-hidden">
-        <div class="bg-gradient-to-br from-brand-soft to-[#f5f3f8] p-5 sm:p-7">
+        <div class="bg-gradient-to-br from-brand-soft to-subtle p-5 sm:p-7">
           <div class="flex items-center gap-4">
             <app-avatar [foto]="fotoVista()" [genero]="estado.genero()" [nombre]="auth.nombre()" [tam]="84" />
             <div class="min-w-0">
@@ -49,7 +49,7 @@ import { UniBadge } from '../../ui/uni-badge';
 
       <div class="sticky bottom-20 lg:bottom-4 z-10">
         <button type="button" class="btn btn-primary w-full !min-h-12 shadow-lg" [disabled]="guardando() || !estado.completo()" (click)="guardar()">{{ guardando() ? 'Guardando…' : 'Guardar cambios' }}</button>
-        @if (error()) { <p class="error-text mt-2 mb-0 text-center bg-white rounded-lg p-2">{{ error() }}</p> }
+        @if (error()) { <p class="error-text mt-2 mb-0 text-center bg-surface rounded-lg p-2">{{ error() }}</p> }
       </div>
 
       <section class="card p-5 sm:p-7">
@@ -62,7 +62,7 @@ import { UniBadge } from '../../ui/uni-badge';
         @if (bloqueos().length === 0) { <p class="text-sm text-muted m-0">No has bloqueado a nadie.</p> }
         <ul class="list-none p-0 m-0 space-y-2">
           @for (b of bloqueos(); track b.id) {
-            <li class="flex items-center gap-3 p-2 rounded-xl bg-[#f5f3f8]">
+            <li class="flex items-center gap-3 p-2 rounded-xl bg-subtle">
               <app-avatar [foto]="personas.de(b.blockedId)?.photoUrl ?? null" [genero]="personas.de(b.blockedId)?.profile?.gender ?? null" [nombre]="personas.nombre(b.blockedId)" [tam]="36" />
               <span class="flex-1 font-bold text-sm truncate">{{ personas.nombre(b.blockedId) }}</span>
               <button type="button" class="btn btn-ghost !min-h-9" (click)="desbloquear(b)">Desbloquear</button>

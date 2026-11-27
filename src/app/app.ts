@@ -15,7 +15,7 @@ import { Modal } from './ui/modal';
     <div class="fixed z-[90] left-1/2 -translate-x-1/2 bottom-24 lg:bottom-6 flex flex-col gap-2 w-[min(92vw,420px)] pointer-events-none" aria-live="polite">
       @for (t of avisos.toasts(); track t.id) {
         <div class="rise pointer-events-auto flex items-start gap-3 rounded-2xl px-4 py-3 shadow-lg text-sm font-semibold text-white"
-          [class.bg-ok]="t.tipo === 'ok'" [class.bg-danger]="t.tipo === 'error'" [class.bg-ink]="t.tipo === 'info'">
+          [class.bg-ok]="t.tipo === 'ok'" [class.bg-danger]="t.tipo === 'error'" [class.bg-night]="t.tipo === 'info'">
           <span class="icon icon-fill shrink-0">{{ t.tipo === 'ok' ? 'check_circle' : t.tipo === 'error' ? 'error' : 'info' }}</span>
           <span class="flex-1">{{ t.texto }}</span>
           <button type="button" class="bg-transparent border-0 text-white/80 cursor-pointer p-0" aria-label="Cerrar aviso" (click)="avisos.quitar(t.id)"><span class="icon !text-[18px]">close</span></button>

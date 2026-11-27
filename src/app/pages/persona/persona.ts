@@ -29,8 +29,8 @@ const MOTIVOS = [
     @else if (!persona()) { <div class="card p-10 text-center"><p class="m-0 text-muted">No encontramos a esta persona o no puedes verla.</p></div> }
     @else if (persona(); as p) {
       <article class="card overflow-hidden max-w-3xl mx-auto">
-        <div class="bg-gradient-to-br from-brand-soft to-[#f5f3f8] p-6 sm:p-8 flex flex-col sm:flex-row items-center gap-5">
-          <span class="rounded-full ring-[6px] ring-white shadow-lg"><app-avatar [foto]="p.photoUrl" [genero]="p.profile?.gender ?? null" [nombre]="p.firstName" [tam]="132" /></span>
+        <div class="bg-gradient-to-br from-brand-soft to-subtle p-6 sm:p-8 flex flex-col sm:flex-row items-center gap-5">
+          <span class="rounded-full ring-[6px] ring-surface shadow-lg"><app-avatar [foto]="p.photoUrl" [genero]="p.profile?.gender ?? null" [nombre]="p.firstName" [tam]="132" /></span>
           <div class="text-center sm:text-left flex-1 min-w-0">
             <h1 class="font-display font-extrabold text-3xl m-0">{{ p.firstName }} {{ p.lastName }}@if (p.profile?.age != null) {<span class="font-semibold text-muted">, {{ p.profile?.age }}</span>}</h1>
             @if (p.profile) {

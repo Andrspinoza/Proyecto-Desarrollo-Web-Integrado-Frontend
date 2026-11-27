@@ -35,7 +35,7 @@ export function fechaFutura(valor: string, ahora = Date.now()): boolean {
         <button type="button" class="btn btn-primary shrink-0" (click)="abrirCrear()"><span class="icon">add</span><span class="hidden sm:inline">Crear plan</span></button>
       </div>
 
-      <div class="grid grid-cols-2 gap-1 p-1 rounded-xl bg-[#ece7f1] mb-5 max-w-sm" role="tablist">
+      <div class="grid grid-cols-2 gap-1 p-1 rounded-xl bg-mist mb-5 max-w-sm" role="tablist">
         <button type="button" role="tab" class="btn !min-h-10 border-0" [attr.aria-selected]="pestana() === 'explorar'" [class.btn-primary]="pestana() === 'explorar'" [class.btn-ghost]="pestana() !== 'explorar'" [class.!bg-transparent]="pestana() !== 'explorar'" (click)="pestana.set('explorar')">Explorar</button>
         <button type="button" role="tab" class="btn !min-h-10 border-0" [attr.aria-selected]="pestana() === 'mios'" [class.btn-primary]="pestana() === 'mios'" [class.btn-ghost]="pestana() !== 'mios'" [class.!bg-transparent]="pestana() !== 'mios'" (click)="pestana.set('mios')">Mis planes</button>
       </div>
