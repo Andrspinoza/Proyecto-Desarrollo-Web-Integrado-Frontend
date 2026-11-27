@@ -1,11 +1,11 @@
 import { CARRERAS, correoEsDeLaUniversidad, metaUniversidad } from './universidades';
 
 describe('universidades', () => {
-  it('conoce las nueve universidades de la red por su dominio', () => {
-    const dominios = ['utp.edu.pe', 'upc.edu.pe', 'utec.edu.pe', 'aloe.ulima.edu.pe', 'usil.pe', 'upn.edu.pe', 'pucp.edu.pe', 'ucvvirtual.edu.pe', 'unmsm.edu.pe'];
+  it('conoce las once universidades de la red por su dominio', () => {
+    const dominios = ['utp.edu.pe', 'upc.edu.pe', 'utec.edu.pe', 'aloe.ulima.edu.pe', 'usil.pe', 'upn.edu.pe', 'pucp.edu.pe', 'ucvvirtual.edu.pe', 'unmsm.edu.pe', 'uwiener.edu.pe', 'unitru.edu.pe'];
     const siglas = dominios.map((d) => metaUniversidad(d).sigla);
 
-    expect(siglas).toEqual(['UTP', 'UPC', 'UTEC', 'ULIMA', 'USIL', 'UPN', 'PUCP', 'UCV', 'UNMSM']);
+    expect(siglas).toEqual(['UTP', 'UPC', 'UTEC', 'ULIMA', 'USIL', 'UPN', 'PUCP', 'UCV', 'UNMSM', 'UNW', 'UNT']);
   });
 
   it('usa una insignia genérica con las iniciales para un dominio desconocido', () => {
@@ -16,7 +16,7 @@ describe('universidades', () => {
   });
 
   it('cada universidad conocida tiene su logo y la genérica no', () => {
-    for (const dominio of ['utp.edu.pe', 'upc.edu.pe', 'utec.edu.pe', 'aloe.ulima.edu.pe', 'usil.pe', 'upn.edu.pe', 'pucp.edu.pe', 'ucvvirtual.edu.pe', 'unmsm.edu.pe']) {
+    for (const dominio of ['utp.edu.pe', 'upc.edu.pe', 'utec.edu.pe', 'aloe.ulima.edu.pe', 'usil.pe', 'upn.edu.pe', 'pucp.edu.pe', 'ucvvirtual.edu.pe', 'unmsm.edu.pe', 'uwiener.edu.pe', 'unitru.edu.pe']) {
       expect(metaUniversidad(dominio).logo).toMatch(/^universidades\//);
     }
     expect(metaUniversidad('unalm.edu.pe').logo).toBeNull();
@@ -28,7 +28,7 @@ describe('universidades', () => {
   });
 
   it('cada universidad tiene al menos una sede sugerida', () => {
-    for (const dominio of ['utp.edu.pe', 'upc.edu.pe', 'utec.edu.pe', 'aloe.ulima.edu.pe', 'usil.pe', 'upn.edu.pe', 'pucp.edu.pe', 'ucvvirtual.edu.pe', 'unmsm.edu.pe']) {
+    for (const dominio of ['utp.edu.pe', 'upc.edu.pe', 'utec.edu.pe', 'aloe.ulima.edu.pe', 'usil.pe', 'upn.edu.pe', 'pucp.edu.pe', 'ucvvirtual.edu.pe', 'unmsm.edu.pe', 'uwiener.edu.pe', 'unitru.edu.pe']) {
       expect(metaUniversidad(dominio).sedes.length).toBeGreaterThan(0);
     }
   });
