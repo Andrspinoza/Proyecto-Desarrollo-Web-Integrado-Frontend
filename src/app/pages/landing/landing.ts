@@ -23,9 +23,9 @@ interface PerfilEjemplo {
           <img src="logo-quesale-naranja.png" alt="" class="h-9 w-9 object-contain" /> ¿Qué sale?
         </a>
         <nav class="hidden md:flex items-center gap-7 text-sm font-semibold" aria-label="Secciones">
-          <a href="#universidades" class="text-muted hover:text-ink no-underline">Universidades</a>
-          <a href="#como" class="text-muted hover:text-ink no-underline">Cómo funciona</a>
-          <a href="#por-que" class="text-muted hover:text-ink no-underline">Por qué ¿Qué sale?</a>
+          <a href="#universidades" (click)="irA($event, 'universidades')" class="text-muted hover:text-ink no-underline">Universidades</a>
+          <a href="#como" (click)="irA($event, 'como')" class="text-muted hover:text-ink no-underline">Cómo funciona</a>
+          <a href="#por-que" (click)="irA($event, 'por-que')" class="text-muted hover:text-ink no-underline">Por qué ¿Qué sale?</a>
         </nav>
         <nav class="flex items-center gap-2" aria-label="Acceso">
           <a routerLink="/acceso" class="btn btn-ghost !min-h-10">Iniciar sesión</a>
@@ -120,13 +120,21 @@ interface PerfilEjemplo {
             <h2 class="font-display text-3xl sm:text-4xl font-bold mt-4 mb-0">Tu universidad, tu gente</h2>
             <p class="text-muted max-w-2xl mx-auto mt-3 mb-0">Cada cuenta pertenece a una universidad y solo descubre estudiantes, planes y comunidades de la suya.</p>
           </div>
-          <ul class="list-none m-0 mt-10 p-0 grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-9 gap-3">
-            @for (u of universidades; track u.dominio) {
-              <li class="h-20 rounded-2xl border border-line bg-white flex items-center justify-center px-3" [attr.title]="u.meta.nombre">
-                <img [src]="u.meta.logo" [alt]="u.meta.nombre" class="object-contain max-w-full" [style.height.px]="u.alto" loading="lazy" />
-              </li>
-            }
-          </ul>
+          <div class="cinta mt-10">
+            <ul class="carril list-none m-0 p-0">
+              @for (u of universidades; track u.dominio) {
+                <li class="h-20 w-40 shrink-0 rounded-2xl border border-line bg-white flex items-center justify-center px-4" [attr.title]="u.meta.nombre">
+                  <img [src]="u.meta.logo" [alt]="u.meta.nombre" class="object-contain max-w-full" [style.height.px]="u.alto" />
+                </li>
+              }
+              @for (u of universidades; track u.dominio) {
+                <li class="copia h-20 w-40 shrink-0 rounded-2xl border border-line bg-white flex items-center justify-center px-4" aria-hidden="true">
+                  <img [src]="u.meta.logo" alt="" class="object-contain max-w-full" [style.height.px]="u.alto" />
+                </li>
+              }
+            </ul>
+          </div>
+          <p class="text-center text-sm text-muted mt-6 mb-0">{{ universidades.length }} universidades y contando.</p>
         </div>
       </section>
 
@@ -182,6 +190,42 @@ interface PerfilEjemplo {
       </div>
     </footer>
   `,
+  styles: [
+    `
+      .cinta {
+        overflow: hidden;
+        mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+      }
+      .carril {
+        display: flex;
+        gap: 0.75rem;
+        width: max-content;
+        animation: desfile 40s linear infinite;
+      }
+      .cinta:hover .carril {
+        animation-play-state: paused;
+      }
+      @keyframes desfile {
+        to {
+          transform: translateX(calc(-50% - 0.375rem));
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .cinta {
+          mask-image: none;
+        }
+        .carril {
+          animation: none;
+          width: auto;
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+        .copia {
+          display: none;
+        }
+      }
+    `,
+  ],
 })
 export class Landing {
   protected readonly perfiles: PerfilEjemplo[] = [
@@ -210,6 +254,7 @@ export class Landing {
     { dominio: 'pucp.edu.pe', alto: 30 },
     { dominio: 'ucvvirtual.edu.pe', alto: 32 },
     { dominio: 'unmsm.edu.pe', alto: 30 },
+    { dominio: 'uwiener.edu.pe', alto: 26 },
   ].map((u) => ({ ...u, meta: metaUniversidad(u.dominio) }));
 
   protected readonly pasos = [
@@ -240,6 +285,14 @@ export class Landing {
       document.removeEventListener('visibilitychange', alCambiarVisibilidad);
     });
     this.reanudar();
+  }
+
+  protected irA(evento: Event, id: string): void {
+    const destino = document.getElementById(id);
+    if (!destino) return;
+    evento.preventDefault();
+    destino.scrollIntoView({ behavior: this.sinMovimiento ? 'auto' : 'smooth', block: 'start' });
+    history.replaceState(null, '', '#' + id);
   }
 
   protected siguiente(): void {
